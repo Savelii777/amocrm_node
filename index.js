@@ -21,7 +21,7 @@ connection.connect((err) => {
     console.log('Connected to the database!');
     const query = "INSERT INTO bookings (room_id, client_id, notes, begin, end, user_id, created_at, updated_at, booking_status_id, deleted_at, group_id, bed_id, sum_prepaid, sum_full, percent_off, guest_count, parent_id, sale_channel_id, tariff_id, expired_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     const values = [
-        1, 2, 'Some notes', new Date(), new Date(Date.now() + 86400000), 3, new Date(), new Date(), 4, null, 5, 1, 100.00, 200.00, 10.00, '2 adults, 1 child', 6, 1, 8, null
+        1, 1, 'Some notes', new Date(), new Date(Date.now() + 86400000), 1, new Date(), new Date(), 1, null, 1, 1, 100.00, 200.00, 10.00, '2 adults, 1 child', 1, 1, 1, null
     ];
     connection.query(query, values, (err, result) => {
         if (err) throw err;
