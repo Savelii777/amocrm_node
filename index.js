@@ -10,9 +10,9 @@ app.use(cors());
 
 const connection = mysql.createConnection({
     host: 'localhost', // адрес сервера (для локальной базы данных это обычно 'localhost')
-    user: 'homestead', // имя пользователя базы данных
-    password: 'secret', // пароль пользователя базы данных
-    database: 'homestead', // имя базы данных
+    user: 'admin_ecoignatevo', // имя пользователя базы данных
+    password: 'hfEqeWmoMLhFvQY0bqxY', // пароль пользователя базы данных
+    database: 'admin_ecoignatevo', // имя базы данных
     port: 3306 // порт базы данных (по умолчанию 3306 для MySQL)
 });
 
