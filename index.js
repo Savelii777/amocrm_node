@@ -19,10 +19,32 @@ const connection = mysql.createConnection({
 connection.connect((err) => {
     if (err) throw err;
     console.log('Connected to the database!');
-    const query = 'SELECT * FROM bookings LIMIT 1';
-    connection.query(query, (err, results) => {
+    const query = 'INSERT INTO booking (room_id, client_id, notes, begin, end, user_id, created_at, updated_at, booking_status_id, deleted_at, group_id, bed_id, sum_prepaid, sum_full, percent_off, guest_count, parent_id, sale_channel_id, tariff_id, expired_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+    const values = [
+        1, // room_id - произвольное целое число без знака
+        2, // client_id - произвольное целое число без знака
+        'Some notes', // notes - произвольная строка
+        new Date(), // begin - текущая дата и время
+        new Date(Date.now() + 86400000), // end - дата и время через сутки
+        3, // user_id - произвольное целое число без знака
+        new Date(), // created_at - текущая дата и время
+        new Date(), // updated_at - текущая дата и время
+        4, // booking_status_id - произвольное целое число без знака
+        null, // deleted_at - null
+        5, // group_id - произвольное целое число без знака
+        1, // bed_id - произвольное целое число без знака
+        100.00, // sum_prepaid - произвольное число с двумя знаками после запятой
+        200.00, // sum_full - произвольное число с двумя знаками после запятой
+        10.00, // percent_off - произвольное число с двумя знаками после запятой
+        '2 adults, 1 child', // guest_count - произвольная строка
+        6, // parent_id - произвольное целое число без знака
+        7, // sale_channel_id - произвольное целое число без знака
+        8, // tariff_id - произвольное целое число без знака
+        null // expired_at - null
+    ];
+    connection.query(query, values, (err, result) => {
         if (err) throw err;
-        console.log(results[0]);
+        console.log('Inserted a new record with ID: ', result.insertId);
     });
 });
 
