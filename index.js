@@ -19,7 +19,7 @@ const connection = mysql.createConnection({
 connection.connect((err) => {
     if (err) throw err;
     console.log('Connected to the database!');
-    const query = 'INSERT INTO booking (room_id, client_id, notes, begin, end, user_id, created_at, updated_at, booking_status_id, deleted_at, group_id, bed_id, sum_prepaid, sum_full, percent_off, guest_count, parent_id, sale_channel_id, tariff_id, expired_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+    const query = 'INSERT INTO bookings (room_id, client_id, notes, begin, end, user_id, created_at, updated_at, booking_status_id, deleted_at, group_id, bed_id, sum_prepaid, sum_full, percent_off, guest_count, parent_id, sale_channel_id, tariff_id, expired_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
     const values = [
         1, // room_id - произвольное целое число без знака
         2, // client_id - произвольное целое число без знака
