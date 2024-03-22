@@ -239,7 +239,7 @@ connection.connect((err) => {
         ]);
 
         leads.then((createdLead) => {
-            console.log('Lead created successfully with ID:', createdLead.data);
+            console.log('Lead created successfully with ID:', createdLead.data[0].id);
         }).catch((error) => {
             console.error('Error creating leads:', error);
         });
