@@ -36,15 +36,16 @@ const connection = mysql.createConnection({
 });
 
 const dsn = {
-    host:     'localhost',
-    user:     'admin_ecoignatevo',
+    host: 'localhost',
+    user: 'admin_ecoignatevo',
     password: 'hfEqeWmoMLhFvQY0bqxY',
+    database: 'admin_ecoignatevo',
+    port: 3306
 };
 
 const mysqlEventWatcher = MySQLEvents(dsn);
 
 // Начинаем прослушивание событий
-mysqlEventWatcher.start();
 
 // Добавляем обработчик события INSERT INTO bookings
 const watcher = mysqlEventWatcher.add(
