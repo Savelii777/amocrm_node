@@ -3,6 +3,7 @@ const express = require('express');
 const { Client } = require('amocrm-js');
 const cors = require('cors');
 const mysql = require('mysql');
+const mysqlEvents = require('mysql-events');
 
 const app = express();
 app.use(cors());
