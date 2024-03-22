@@ -6,6 +6,7 @@ const mysql = require('mysql');
 const MySQLEvents = require('@rodrigogs/mysql-events');
 const os = require('os');
 const cron = require('node-cron');
+const fs = require('fs');
 
 
 
@@ -51,6 +52,17 @@ connection.connect((err) => {
     const query = 'SELECT bookings.*, clients.* FROM bookings INNER JOIN clients ON bookings.client_id = clients.id ORDER BY bookings.created_at DESC LIMIT 1';
     connection.query(query, (err, results) => {
         console.log(query);
+
+        function writeIdToFile(id) {
+            fs.writeFile('booking_id.txt', id, (err) => {
+                if (err) {
+                    console.error('Error writing to file:', err);
+                    return;
+                }
+
+                console.log('ID successfully written to file');
+            });
+        }
         function formatDate(date) {
             const year = date.getFullYear();
             const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -238,9 +250,7 @@ connection.connect((err) => {
         }
 
         if (results.length > 0) {
-            console.log('Booking data:', results[0]);
-            console.log('Booking ID:', results[0].booking_id); // Выводим ID записи в таблице bookings
-            console.log('Client data:', results[0].client_id, results[0]);
+            writeIdToFile(results[0].id);
         } else {
             console.log('No results found');
         }
