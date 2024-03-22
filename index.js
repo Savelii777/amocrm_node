@@ -54,9 +54,9 @@ connection.connect((err) => {
         console.log(query);
 
         function writeIdsToFile(id, transactionId) {
-            const data = `ID: ${id}\nTransaction ID: ${transactionId}`;
+            const data = `ID: ${id}\nTransaction ID: ${transactionId}\n`;
 
-            fs.writeFile('ids.txt', data, (err) => {
+            fs.appendFile('ids.txt', data, (err) => {
                 if (err) {
                     console.error('Error writing to file:', err);
                     return;
