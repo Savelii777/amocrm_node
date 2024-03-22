@@ -62,6 +62,7 @@ connection.connect((err) => {
         } else {
             console.log('No results found');
         }
+    });
     // const query = 'SELECT * FROM bookings ORDER BY created_at DESC LIMIT 1';
     // connection.query(query, (err, results) => {
     //     console.log(query);
