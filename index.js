@@ -28,80 +28,80 @@ const client = new Client({
 
 client.token.setValue(token);
 
-const connection = mysql.createConnection({
-    host: 'localhost', // адрес сервера (для локальной базы данных это обычно 'localhost')
-    user: 'admin_ecoignatevo', // имя пользователя базы данных
-    password: 'hfEqeWmoMLhFvQY0bqxY', // пароль пользователя базы данных
-    database: 'admin_ecoignatevo', // имя базы данных
-    port: 3306 // порт базы данных (по умолчанию 3306 для MySQL)
-});
+// const connection = mysql.createConnection({
+//     host: 'localhost', // адрес сервера (для локальной базы данных это обычно 'localhost')
+//     user: 'admin_ecoignatevo', // имя пользователя базы данных
+//     password: 'hfEqeWmoMLhFvQY0bqxY', // пароль пользователя базы данных
+//     database: 'admin_ecoignatevo', // имя базы данных
+//     port: 3306 // порт базы данных (по умолчанию 3306 для MySQL)
+// });
+//
+// connection.connect((err) => {
+//     if (err) throw err;
+//     console.log('Connected to the database!');
+// });
 
-connection.connect((err) => {
-    if (err) throw err;
-    console.log('Connected to the database!');
-});
 
+const program = async () => {
+    const connection = mysql.createConnection({
+        host: 'localhost', // адрес сервера (для локальной базы данных это обычно 'localhost')
+        user: 'admin_ecoignatevo', // имя пользователя базы данных
+        password: 'hfEqeWmoMLhFvQY0bqxY', // пароль пользователя базы данных
+        database: 'admin_ecoignatevo', // имя базы данных
+        port: 3306 // порт базы данных (по умолчанию 3306 для MySQL)
+    });
 
-// const program = async () => {
-//     const connection = mysql.createConnection({
-//         host: 'localhost',
-//         user: 'root',
-//         password: '',
-//         database: 'admin_ecoignatevo',
-//         port: 3306,
-//     });
-//
-//     const instance = new MySQLEvents(connection, {
-//         startAtEnd: true,
-//         excludedSchemas: {
-//             mysql: true,
-//         },
-//     });
-//
-//     await instance.start();
-//
-//     instance.addTrigger({
-//         name: 'Monitor Bookings',
-//         expression: 'admin_ecoignatevo.bookings.*', // listen to admin_ecoignatevo database bookings table only
-//         statement: MySQLEvents.STATEMENTS.INSERT, // listen only insert statements
-//         onEvent: (event) => { // You will receive the events here
-//             const row = event.affectedRows[0].after;
-//             client.leads.add({
-//                 name: row.guest_count,
-//                 custom_fields: {
-//                     'room_id': row.room_id,
-//                     'client_id': row.client_id,
-//                     'notes': row.notes,
-//                     'begin': row.begin,
-//                     'end': row.end,
-//                     'user_id': row.user_id,
-//                     'created_at': row.created_at,
-//                     'updated_at': row.updated_at,
-//                     'booking_status_id': row.booking_status_id,
-//                     'deleted_at': row.deleted_at,
-//                     'group_id': row.group_id,
-//                     'bed_id': row.bed_id,
-//                     'sum_prepaid': row.sum_prepaid,
-//                     'sum_full': row.sum_full,
-//                     'percent_off': row.percent_off,
-//                     'guest_count': row.guest_count,
-//                     'parent_id': row.parent_id,
-//                     'sale_channel_id': row.sale_channel_id,
-//                     'tariff_id': row.tariff_id,
-//                     'expired_at': row.expired_at,
-//                 },
-//             });
-//         },
-//     });
-//
-//     instance.on(MySQLEvents.EVENTS.CONNECTION_ERROR, console.error);
-//     instance.on(MySQLEvents.EVENTS.ZONGJI_ERROR, console.error);
-// };
-//
-// program()
-//     .then(() => console.log('Waiting for database events...'))
-//     .catch(console.error);
-//
+    const instance = new MySQLEvents(connection, {
+        startAtEnd: true,
+        excludedSchemas: {
+            mysql: true,
+        },
+    });
+
+    await instance.start();
+
+    instance.addTrigger({
+        name: 'Monitor Bookings',
+        expression: 'admin_ecoignatevo.bookings.*', // listen to admin_ecoignatevo database bookings table only
+        statement: MySQLEvents.STATEMENTS.INSERT, // listen only insert statements
+        onEvent: (event) => { // You will receive the events here
+            const row = event.affectedRows[0].after;
+            client.leads.add({
+                name: row.guest_count,
+                custom_fields: {
+                    'room_id': row.room_id,
+                    'client_id': row.client_id,
+                    'notes': row.notes,
+                    'begin': row.begin,
+                    'end': row.end,
+                    'user_id': row.user_id,
+                    'created_at': row.created_at,
+                    'updated_at': row.updated_at,
+                    'booking_status_id': row.booking_status_id,
+                    'deleted_at': row.deleted_at,
+                    'group_id': row.group_id,
+                    'bed_id': row.bed_id,
+                    'sum_prepaid': row.sum_prepaid,
+                    'sum_full': row.sum_full,
+                    'percent_off': row.percent_off,
+                    'guest_count': row.guest_count,
+                    'parent_id': row.parent_id,
+                    'sale_channel_id': row.sale_channel_id,
+                    'tariff_id': row.tariff_id,
+                    'expired_at': row.expired_at,
+                },
+            });
+        },
+    });
+
+    instance.on(MySQLEvents.EVENTS.CONNECTION_ERROR, console.error);
+    instance.on(MySQLEvents.EVENTS.ZONGJI_ERROR, console.error);
+};
+
+program()
+    .then(() => console.log('Waiting for database events...'))
+    .catch(console.error);
+
 
 
 
