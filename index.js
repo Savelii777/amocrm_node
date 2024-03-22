@@ -57,25 +57,31 @@ connection.connect((err) => {
             return;
         }
 
-        const leads = client.request.post('/api/v4/leads/', [
+        const leads = client.request.post('/api/v4/leads/complex', [
             {
-                "name": "Сделка для примера 1",
-                "created_by": 0,
-                "price": 20000,
-                "pipeline_id": 7948234, // Добавлено pipeline_id для первой сделки
-            },
-            {
-                "pipeline_id": 7948234,
-                "name": "Сделка для примера 2",
-                "price": 10000,
-                "_embedded": {
-                    "tags": [
+                "name": "Название сделки",
+                "price": 3422,
+                "_embedded":{
+                    "contacts":[
                         {
-                            "id": 65270938
+                            "first_name":"Екатерина",
+                            "created_at":1608905348,
+                            "responsible_user_id":2004184,
+                            "updated_by":0,
+                        }
+                    ],
+                    "companies":[
+                        {
+                            "name":"ООО Рога и Копыта"
                         }
                     ]
-                }
-            }
+                },
+                "created_at":1608905348,
+                "responsible_user_id":2004184,
+                "status_id":65270938,
+                "pipeline_id":7948234,
+                "request_id": "6ae72b26-f45b-4739-9f09-d2dfb98d48a8"
+            },
         ]);
 
         leads.then(() => {
