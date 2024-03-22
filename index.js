@@ -55,7 +55,7 @@ connection.connect((err) => {
             return;
         }
 
-        const leads = client.contacts.create([
+        const leads = client.leads.create([
             {
                 name: "Lead 1"
             },
