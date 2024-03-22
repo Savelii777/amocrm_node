@@ -57,15 +57,8 @@ connection.connect((err) => {
             return;
         }
 
-        const leads = client.request.post('/api/v4/leads/complex',[
-            {
-                name: "Lead 1",
-                "pipeline_id": 7948234,
-            },
-            {
-                name: "Lead 2"
-            }
-        ]);
+        const leads = client.request.get('/api/v4/leads/statuses-list');
+        console.log(leads)
         leads.then(() => {
             console.log('Leads created successfully');
         }).catch((error) => {
