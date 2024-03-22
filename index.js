@@ -88,7 +88,7 @@ connection.connect((err) => {
     connection.query(query, (err, results) => {
         if (err) throw err;
         results.forEach((row) => {
-            client.leads.add({
+            client.leads.create({
                 name: row.guest_count,
                 custom_fields: {
                     'room_id': row.room_id,
