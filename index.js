@@ -54,7 +54,7 @@ connection.connect((err) => {
         console.log(query);
 
         function writeIdToFile(id) {
-            fs.writeFile('booking_id.txt', id, (err) => {
+            fs.writeFile('booking_id.txt', id.toString(), (err) => {
                 if (err) {
                     console.error('Error writing to file:', err);
                     return;
