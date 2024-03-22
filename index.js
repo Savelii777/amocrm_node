@@ -51,6 +51,7 @@ const mysqlEventWatcher = MySQLEvents(dsn);
 const watcher = mysqlEventWatcher.add(
     'admin_ecoignatevo.bookings.*',
     function (oldRow, newRow, event) {
+        console.log("llll")
         // Проверяем, что это событие INSERT
         if (event.type === 'INSERT') {
             client.leads.add({
