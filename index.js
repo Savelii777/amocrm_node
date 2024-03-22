@@ -38,7 +38,7 @@ const connection = mysql.createConnection({
 const event = mysqlEvents.createEvent('bookings_insert', {
     serverId: 1, // Идентификатор сервера MySQL
     db: 'admin_ecoignatevo', // Имя базы данных
-    table: 'bookings', // Имя таблицы
+    table: 'bookings', // Имя таблиц
     action: 'insert', // Тип события
 });
 
