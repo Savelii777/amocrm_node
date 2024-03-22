@@ -69,7 +69,7 @@ connection.connect((err) => {
         const formattedToday = formatDate(today);
         const formattedTomorrow = formatDate(tomorrow);
 
-
+        const guestCount = parseInt(results[0].guest_count, 10);
         const leads = client.request.post('/api/v4/leads/complex', [
             {
                 "name": results[0].id + "",
@@ -126,7 +126,7 @@ connection.connect((err) => {
                         "field_type": "numeric",
                         "values": [
                             {
-                                "value": 0
+                                "value": results[0].percent_off
                             }
                         ]
                     },
@@ -137,7 +137,7 @@ connection.connect((err) => {
                         "field_type": "numeric",
                         "values": [
                             {
-                                "value": results[0].percent_off
+                                "value": guestCount
                             }
                         ]
                     },
