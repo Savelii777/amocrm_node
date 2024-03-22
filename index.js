@@ -50,7 +50,7 @@ connection.connect((err) => {
     console.log('Connected to the database');
     const query = 'SELECT bookings.*, clients.* FROM bookings INNER JOIN clients ON bookings.client_id = clients.id ORDER BY bookings.created_at DESC LIMIT 1';
     connection.query(query, (err, results) => {
-        console.log(results[0].begin);
+        console.log(query);
         function formatDate(date) {
             const year = date.getFullYear();
             const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -63,9 +63,8 @@ connection.connect((err) => {
             return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}+${timezoneOffset}:00`;
         }
 
-        const today = new Date();
-        const tomorrow = new Date(today);
-        tomorrow.setDate(today.getDate() + 1);
+        const today = results[0].begin;
+        const tomorrow = results[0].end;
 
         const formattedToday = formatDate(today);
         const formattedTomorrow = formatDate(tomorrow);
