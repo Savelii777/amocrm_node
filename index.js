@@ -57,65 +57,72 @@ connection.connect((err) => {
             return;
         }
 
-        const leads = client.request.post('/api/v4/leads/unsorted/forms',[
-            {
-                "request_id": "123",
-                "source_name": "ОАО Коспромсервис",
-                "source_uid": "6ae72b26-f45b-4739-9f09-d2dfb98d48a8",
-                "pipeline_id": 7948234,
-                "created_at": 1590830520,
-                "_embedded": {
-                    "leads": [
-                        {
-                            "name": "Тех обслуживание",
-                            "visitor_uid": "5692210d-58d0-468c-acb2-dce7f93eef87",
-                            "price": 5000,
-                            "_embedded": {
-                                "tags": [
-                                    {
-                                        "name": "ПЕРЕГОВОРЫ"
-                                    }
-                                ]
-                            }
-                        }
-                    ],
-                    "contacts": [
-                        {
-                            "name": 234,
-                            "first_name": "123213",
-                            "last_name": 234,
-                            "custom_fields_values": [
-                                {
-                                    "field_code": "PHONE",
-                                    "values": [
-                                        {
-                                            "value": "+7912321323"
-                                        }
-                                    ]
-                                }
-                            ]
-                        }
-                    ],
-                    "companies": [
-                        {
-                            "name": "ОАО Коспромсервис"
-                        }
-                    ]
-                },
-                "metadata": {
-                    "ip": "123.222.2.22",
-                    "form_id": "a1fee7c0fc436088e64ba2e8822ba2b3ewrw",
-                    "form_sent_at": 1590830520,
-                    "form_name": "Форма заявки для полёта в космос",
-                    "form_page": "https://example.com",
-                    "referer": "https://www.google.com/search?&q=elon+musk"
-                }
-            }
-        ]);
-        leads.then(() => {
-            console.log('Leads created successfully');
+        // const leads = client.request.post('/api/v4/leads/unsorted/forms',[
+        //     {
+        //         "request_id": "123",
+        //         "source_name": "ОАО Коспромсервис",
+        //         "source_uid": "6ae72b26-f45b-4739-9f09-d2dfb98d48a8",
+        //         "pipeline_id": 7948234,
+        //         "created_at": 1590830520,
+        //         "_embedded": {
+        //             "leads": [
+        //                 {
+        //                     "name": "Тех обслуживание",
+        //                     "visitor_uid": "5692210d-58d0-468c-acb2-dce7f93eef87",
+        //                     "price": 5000,
+        //                     "_embedded": {
+        //                         "tags": [
+        //                             {
+        //                                 "name": "ПЕРЕГОВОРЫ"
+        //                             }
+        //                         ]
+        //                     }
+        //                 }
+        //             ],
+        //             "contacts": [
+        //                 {
+        //                     "name": 234,
+        //                     "first_name": "123213",
+        //                     "last_name": 234,
+        //                     "custom_fields_values": [
+        //                         {
+        //                             "field_code": "PHONE",
+        //                             "values": [
+        //                                 {
+        //                                     "value": "+7912321323"
+        //                                 }
+        //                             ]
+        //                         }
+        //                     ]
+        //                 }
+        //             ],
+        //             "companies": [
+        //                 {
+        //                     "name": "ОАО Коспромсервис"
+        //                 }
+        //             ]
+        //         },
+        //         "metadata": {
+        //             "ip": "123.222.2.22",
+        //             "form_id": "a1fee7c0fc436088e64ba2e8822ba2b3ewrw",
+        //             "form_sent_at": 1590830520,
+        //             "form_name": "Форма заявки для полёта в космос",
+        //             "form_page": "https://example.com",
+        //             "referer": "https://www.google.com/search?&q=elon+musk"
+        //         }
+        //     }
+        // ]);
+        // leads.then(() => {
+        //     console.log('Leads created successfully');
+        // }).catch((error) => {
+        //     console.error('Error creating leads:', error);
+        // });
+        const statuses = client.request.get(`/api/v4/leads/pipelines/7948234/statuses?limit=10&offset=20`);
+
+        statuses.then((response) => {
+            console.log(response);
         }).catch((error) => {
-            console.error('Error creating leads:', error);
+            console.error(error);
         });
     });
 });
