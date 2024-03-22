@@ -138,7 +138,7 @@ connection.connect((err) => {
                         "field_id": 1527485,
                         "field_name": "Скидка",
                         "field_code": null,
-                        "field_type": "text",
+                        "field_type": "numeric",
                         "values": [
                             {
                                 "value": 0
@@ -149,7 +149,7 @@ connection.connect((err) => {
                         "field_id": 1527487,
                         "field_name": "Количество гостей",
                         "field_code": null,
-                        "field_type": "text",
+                        "field_type": "numeric",
                         "values": [
                             {
                                 "value": 1
