@@ -73,9 +73,15 @@ connection.connect((err) => {
 
 const PORT = process.env.PORT || 3000;
 const server = http.createServer(app);
+
+server.on('error', (error) => {
+    console.error('Error starting server:', error);
+});
+
 server.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
+
 
 
 
