@@ -86,10 +86,19 @@ connection.connect((err) => {
 
     const query = 'SELECT * FROM bookings ORDER BY created_at DESC LIMIT 1'; // выбираем последнюю запись
     connection.query(query, (err, results) => {
+        const leads =  client.leads.create([
+            {
+                name: "Lead 1"
+            },
+            {
+                name: "Lead 2"
+            }
+        ]);
+
         if (err) throw err;
-        results.forEach(async (row) => {
-            const item = await client.leads.create({
-                name: "sksksksk",
+        // results.forEach((row) => {
+        //     client.leads.create({
+        //         name: row.notes,
                 // custom_fields: {
                 //     'room_id': row.room_id,
                 //     'client_id': row.client_id,
@@ -112,8 +121,8 @@ connection.connect((err) => {
                 //     'tariff_id': row.tariff_id,
                 //     'expired_at': row.expired_at,
                 // },
-            });
-        });
+            // });
+        // });
     });
 });
 
