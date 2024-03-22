@@ -5,6 +5,8 @@ const cors = require('cors');
 const mysql = require('mysql');
 const MySQLEvents = require('@rodrigogs/mysql-events');
 const os = require('os');
+const cron = require('node-cron');
+
 
 
 const app = express();
@@ -28,44 +30,25 @@ const client = new Client({
 
 client.token.setValue(token);
 
-// const connection = mysql.createConnection({
-//     host: 'localhost', // адрес сервера (для локальной базы данных это обычно 'localhost')
-//     user: 'admin_ecoignatevo', // имя пользователя базы данных
-//     password: 'hfEqeWmoMLhFvQY0bqxY', // пароль пользователя базы данных
-//     database: 'admin_ecoignatevo', // имя базы данных
-//     port: 3306 // порт базы данных (по умолчанию 3306 для MySQL)
-// });
-//
-// connection.connect((err) => {
-//     if (err) throw err;
-//     console.log('Connected to the database!');
-// });
+const connection = mysql.createConnection({
+    host: 'localhost',
+    user: 'admin_d-vlesu',
+    password: 'cb37J8tK02',
+    database: 'admin_d-vlesu',
+    port: 3306
+});
+
+connection.connect((err) => {
+    if (err) throw err;
+    console.log('Connected to the database');
+});
 
 
-const program = async () => {
-    const connection = mysql.createConnection({
-        host: 'localhost', // адрес сервера (для локальной базы данных это обычно 'localhost')
-        user: 'admin_ecoignatevo', // имя пользователя базы данных
-        password: 'hfEqeWmoMLhFvQY0bqxY', // пароль пользователя базы данных
-        database: 'admin_ecoignatevo', // имя базы данных
-        port: 3306 // порт базы данных (по умолчанию 3306 для MySQL)
-    });
-
-    const instance = new MySQLEvents(connection, {
-        startAtEnd: true,
-        excludedSchemas: {
-            mysql: true,
-        },
-    });
-
-    await instance.start();
-
-    instance.addTrigger({
-        name: 'Monitor Bookings',
-        expression: 'admin_ecoignatevo.bookings.*', // listen to admin_ecoignatevo database bookings table only
-        statement: MySQLEvents.STATEMENTS.INSERT, // listen only insert statements
-        onEvent: (event) => { // You will receive the events here
-            const row = event.affectedRows[0].after;
+cron.schedule('*/5 * * * *', () => { // запускаем задачу раз в 5 минут
+    const query = 'SELECT * FROM bookings WHERE created_at > DATE_SUB(NOW(), INTERVAL 5 MINUTE)'; // выбираем новые записи за последние 5 минут
+    connection.query(query, (err, results) => {
+        if (err) throw err;
+        results.forEach((row) => {
             client.leads.add({
                 name: row.guest_count,
                 custom_fields: {
@@ -91,16 +74,9 @@ const program = async () => {
                     'expired_at': row.expired_at,
                 },
             });
-        },
+        });
     });
-
-    instance.on(MySQLEvents.EVENTS.CONNECTION_ERROR, console.error);
-    instance.on(MySQLEvents.EVENTS.ZONGJI_ERROR, console.error);
-};
-
-program()
-    .then(() => console.log('Waiting for database events...'))
-    .catch(console.error);
+});
 
 
 
