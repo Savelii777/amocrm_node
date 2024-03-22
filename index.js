@@ -57,7 +57,7 @@ connection.connect((err) => {
             return;
         }
 
-        const leads = client.request.post('/api/v4/leads/unsorted/forms',[
+        const leads = client.request.post('/api/v4/leads/complex',[
             {
                 "name": "Название сделки",
                 "price": 3422,
