@@ -78,7 +78,7 @@ connection.connect((err) => {
         const formattedTomorrow = tomorrow.toISOString().split('T')[0];
         const leads = client.request.post('/api/v4/leads/complex', [
             {
-                "name": "Сделка #7354481",
+                "name": "Сделкаdomodso",
                 "price": 5000,
                 "responsible_user_id": 10783318,
                 "group_id": 0,
@@ -96,7 +96,7 @@ connection.connect((err) => {
                         "field_type": "date",
                         "values": [
                             {
-                                "value": 1711227600
+                                "value": formattedToday
                             }
                         ]
                     },
@@ -107,7 +107,7 @@ connection.connect((err) => {
                         "field_type": "date",
                         "values": [
                             {
-                                "value": 1711314000
+                                "value": formattedTomorrow
                             }
                         ]
                     },
@@ -129,7 +129,7 @@ connection.connect((err) => {
                         "field_type": "numeric",
                         "values": [
                             {
-                                "value": "0"
+                                "value": 0
                             }
                         ]
                     },
@@ -140,7 +140,7 @@ connection.connect((err) => {
                         "field_type": "text",
                         "values": [
                             {
-                                "value": "0"
+                                "value": 0
                             }
                         ]
                     },
@@ -151,7 +151,7 @@ connection.connect((err) => {
                         "field_type": "text",
                         "values": [
                             {
-                                "value": "1"
+                                "value": 1
                             }
                         ]
                     }
