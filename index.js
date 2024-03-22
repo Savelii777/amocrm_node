@@ -55,7 +55,7 @@ connection.connect((err) => {
             return;
         }
 
-        const leads = client.leads.create([
+        const leads = client.request.post('/api/v4/leads',[
             {
                 name: "Lead 1"
             },
