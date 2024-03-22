@@ -70,12 +70,25 @@ connection.connect((err) => {
             console.error('Error executing database query:', err);
             return;
         }
+        function formatDate(date) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            const hours = String(date.getHours()).padStart(2, '0');
+            const minutes = String(date.getMinutes()).padStart(2, '0');
+            const seconds = String(date.getSeconds()).padStart(2, '0');
+            const timezoneOffset = String(date.getTimezoneOffset() / -60).padStart(2, '0');
+
+            return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}+${timezoneOffset}:00`;
+        }
+
         const today = new Date();
         const tomorrow = new Date(today);
         tomorrow.setDate(today.getDate() + 1);
 
-        const formattedToday = today.toISOString();
-        const formattedTomorrow = tomorrow.toISOString();
+        const formattedToday = formatDate(today);
+        const formattedTomorrow = formatDate(tomorrow);
+
 
         const leads = client.request.post('/api/v4/leads/complex', [
             {
