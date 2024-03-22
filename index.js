@@ -3,7 +3,7 @@ const express = require('express');
 const { Client } = require('amocrm-js');
 const cors = require('cors');
 const mysql = require('mysql');
-const mysqlEvents = require('mysql-events');
+const MySQLEvents = require('mysql-events');
 
 const app = express();
 app.use(cors());
@@ -34,62 +34,109 @@ const connection = mysql.createConnection({
     database: 'admin_ecoignatevo', // имя базы данных
     port: 3306 // порт базы данных (по умолчанию 3306 для MySQL)
 });
+const dsn = {
+    host:     'localhost',
+    user:     'admin_ecoignatevo',
+    password: 'hfEqeWmoMLhFvQY0bqxY',
+};
 
-const event = mysqlEvents.createEvent('bookings_insert', {
-    serverId: 1, // Идентификатор сервера MySQL
-    db: 'admin_ecoignatevo', // Имя базы данных
-    table: 'bookings', // Имя таблиц
-    action: 'insert', // Тип события
-});
+const mysqlEventWatcher = MySQLEvents(dsn);
 
 // Подключаемся к базе данных MySQL
-connection.getConnection((err, connection) => {
-    if (err) throw err;
-    console.log('Connected to the database!');
 
-    // Начинаем прослушивание событий
-    event.start(connection, (err) => {
-        if (err) throw err;
-        console.log('Listening for events...');
-    });
+const watcher =mysqlEventWatcher.add(
+    'myDB.table.field.value',
+    function (oldRow, newRow, event) {
+        //row inserted
+        if (oldRow === null) {
+            client.leads.add({
+                name: newRow.guest_count,
+                custom_fields: {
+                    'room_id': newRow.room_id,
+                    'client_id': newRow.client_id,
+                    'notes': newRow.notes,
+                    'begin': newRow.begin,
+                    'end': newRow.end,
+                    'user_id': newRow.user_id,
+                    'created_at': newRow.created_at,
+                    'updated_at': newRow.updated_at,
+                    'booking_status_id': newRow.booking_status_id,
+                    'deleted_at': newRow.deleted_at,
+                    'group_id': newRow.group_id,
+                    'bed_id': newRow.bed_id,
+                    'sum_prepaid': newRow.sum_prepaid,
+                    'sum_full': newRow.sum_full,
+                    'percent_off': newRow.percent_off,
+                    'guest_count': newRow.guest_count,
+                    'parent_id': newRow.parent_id,
+                    'sale_channel_id': newRow.sale_channel_id,
+                    'tariff_id': newRow.tariff_id,
+                    'expired_at': newRow.expired_at,
+                } })
+        }
 
-    // Обрабатываем событие insert
-    event.on('insert', (data) => {
-        const row = data.rows[0];
-        console.log(`New booking added: ${JSON.stringify(row)}`);
+        //row deleted
+        if (newRow === null) {
+            //delete code goes here
+        }
 
-        // Создаем новую сделку в AmoCRM
-        client.leads.add({
-            name: row.guest_count,
-            custom_fields: {
-                'room_id': row.room_id,
-                'client_id': row.client_id,
-                'notes': row.notes,
-                'begin': row.begin,
-                'end': row.end,
-                'user_id': row.user_id,
-                'created_at': row.created_at,
-                'updated_at': row.updated_at,
-                'booking_status_id': row.booking_status_id,
-                'deleted_at': row.deleted_at,
-                'group_id': row.group_id,
-                'bed_id': row.bed_id,
-                'sum_prepaid': row.sum_prepaid,
-                'sum_full': row.sum_full,
-                'percent_off': row.percent_off,
-                'guest_count': row.guest_count,
-                'parent_id': row.parent_id,
-                'sale_channel_id': row.sale_channel_id,
-                'tariff_id': row.tariff_id,
-                'expired_at': row.expired_at,
-            },
-        }).then((lead) => {
-            console.log(`New lead added: ${lead.id}`);
-        }).catch((error) => {
-            console.error(error);
-        });
-    });
-});
+        //row updated
+        if (oldRow !== null && newRow !== null) {
+            //update code goes here
+        }
+
+        //detailed event information
+        //console.log(event)
+    },
+    'match this string or regex'
+);
+// connection.getConnection((err, connection) => {
+//     if (err) throw err;
+//     console.log('Connected to the database!');
+//
+//     // Начинаем прослушивание событий
+//     event.start(connection, (err) => {
+//         if (err) throw err;
+//         console.log('Listening for events...');
+//     });
+//
+//     // Обрабатываем событие insert
+//     event.on('insert', (data) => {
+//         const row = data.rows[0];
+//         console.log(`New booking added: ${JSON.stringify(row)}`);
+//
+//         // Создаем новую сделку в AmoCRM
+//         client.leads.add({
+//             name: row.guest_count,
+//             custom_fields: {
+//                 'room_id': row.room_id,
+//                 'client_id': row.client_id,
+//                 'notes': row.notes,
+//                 'begin': row.begin,
+//                 'end': row.end,
+//                 'user_id': row.user_id,
+//                 'created_at': row.created_at,
+//                 'updated_at': row.updated_at,
+//                 'booking_status_id': row.booking_status_id,
+//                 'deleted_at': row.deleted_at,
+//                 'group_id': row.group_id,
+//                 'bed_id': row.bed_id,
+//                 'sum_prepaid': row.sum_prepaid,
+//                 'sum_full': row.sum_full,
+//                 'percent_off': row.percent_off,
+//                 'guest_count': row.guest_count,
+//                 'parent_id': row.parent_id,
+//                 'sale_channel_id': row.sale_channel_id,
+//                 'tariff_id': row.tariff_id,
+//                 'expired_at': row.expired_at,
+//             },
+//         }).then((lead) => {
+//             console.log(`New lead added: ${lead.id}`);
+//         }).catch((error) => {
+//             console.error(error);
+//         });
+//     });
+// });
 
 
 
