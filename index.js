@@ -81,14 +81,14 @@ connection.connect((err) => {
             {
                 "name": "Сделкаdomodso",
                 "price": 5000,
-                "responsible_user_id": 10783318,
-                "group_id": 0,
-                "loss_reason_id": null,
-                "created_by": 10783318,
-                "updated_by": 10783318,
-                "closed_at": null,
-                "closest_task_at": null,
-                "is_deleted": false,
+                // "responsible_user_id": 10783318,
+                // "group_id": 0,
+                // "loss_reason_id": null,
+                // "created_by": 10783318,
+                // "updated_by": 10783318,
+                // "closed_at": null,
+                // "closest_task_at": null,
+                // "is_deleted": false,
                 "custom_fields_values": [
                     // {
                     //     "field_id": 1527477,
