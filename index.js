@@ -80,56 +80,56 @@ connection.connect((err) => {
             {
                 "name": "Название сделки",
                 "price": 5000,
-                "custom_fields_values": [
-                    {
-                        "field_id": 1527477,
-                        "values": [
-                            {
-                                "value": formattedToday
-                            }
-                        ]
-                    },
-                    {
-                        "field_id": 1527479,
-                        "values": [
-                            {
-                                "value": formattedTomorrow
-                            }
-                        ]
-                    },
-                    {
-                        "field_id": 1527481,
-                        "values": [
-                            {
-                                "value": "dnjsndsnj"
-                            }
-                        ]
-                    },
-                    {
-                        "field_id": 1527483,
-                        "values": [
-                            {
-                                "value": 1000
-                            }
-                        ]
-                    },
-                    {
-                        "field_id": 1527485,
-                        "values": [
-                            {
-                                "value": 0
-                            }
-                        ]
-                    },
-                    {
-                        "field_id": 1527487,
-                        "values": [
-                            {
-                                "value": 1
-                            }
-                        ]
-                    },
-                ],
+                // "custom_fields_values": [
+                //     {
+                //         "field_id": 1527477,
+                //         "values": [
+                //             {
+                //                 "value": formattedToday
+                //             }
+                //         ]
+                //     },
+                //     {
+                //         "field_id": 1527479,
+                //         "values": [
+                //             {
+                //                 "value": formattedTomorrow
+                //             }
+                //         ]
+                //     },
+                //     {
+                //         "field_id": 1527481,
+                //         "values": [
+                //             {
+                //                 "value": "dnjsndsnj"
+                //             }
+                //         ]
+                //     },
+                //     {
+                //         "field_id": 1527483,
+                //         "values": [
+                //             {
+                //                 "value": 1000
+                //             }
+                //         ]
+                //     },
+                //     {
+                //         "field_id": 1527485,
+                //         "values": [
+                //             {
+                //                 "value": 0
+                //             }
+                //         ]
+                //     },
+                //     {
+                //         "field_id": 1527487,
+                //         "values": [
+                //             {
+                //                 "value": 1
+                //             }
+                //         ]
+                //     },
+                // ],
                 "created_at":1608905348,
                 "status_id":65270938,
                 "pipeline_id":7948234,
