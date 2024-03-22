@@ -82,7 +82,11 @@ connection.connect((err) => {
                 "pipeline_id":7948234,
                 "request_id": "6ae72b26-f45b-4739-9f09-d2dfb98d48a8"
             },
-        ]);
+        ], {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
 
         leads.then(() => {
             console.log('Leads created successfully');
