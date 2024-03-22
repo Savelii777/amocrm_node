@@ -113,27 +113,26 @@ connection.connect((err) => {
     //     }
     //
     // });
-        const statuses = client.request.get(`/api/v4/leads/custom_fields/7354481`);
+        const statuses = client.request.get(`/api/v4/leads/7354481`);
 
         statuses.then((response) => {
-            // console.log(JSON.stringify(response.data, null, 2)); // Красивый вывод всего объекта с отступами
-            // printNestedData(response.data); // Рекурсивный вывод всех вложенных элементов
-            console.log(response.data)
+            console.log(JSON.stringify(response.data, null, 2)); // Красивый вывод всего объекта с отступами
+            printNestedData(response.data); // Рекурсивный вывод всех вложенных элементов
         }).catch((error) => {
             console.error(error);
         });
-        // function printNestedData(data) {
-        //     for (let key in data) {
-        //         if (data.hasOwnProperty(key)) {
-        //             if (typeof data[key] === 'object' && data[key] !== null) {
-        //                 console.log(`${key}:`);
-        //                 printNestedData(data[key]); // Рекурсивный вызов для вложенных объектов
-        //             } else {
-        //                 console.log(`${key}: ${data[key]}`);
-        //             }
-        //         }
-        //     }
-        // }
+        function printNestedData(data) {
+            for (let key in data) {
+                if (data.hasOwnProperty(key)) {
+                    if (typeof data[key] === 'object' && data[key] !== null) {
+                        console.log(`${key}:`);
+                        printNestedData(data[key]); // Рекурсивный вызов для вложенных объектов
+                    } else {
+                        console.log(`${key}: ${data[key]}`);
+                    }
+                }
+            }
+        }
 });
 
 const PORT = process.env.PORT || 3000;
