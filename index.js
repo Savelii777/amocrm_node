@@ -28,12 +28,13 @@ client.token.setValue(token);
 
 
 const connection = mysql.createConnection({
-    host: 'localhost', // адрес сервера (для локальной базы данных это обычно 'localhost')
-    user: 'admin_ecoignatevo', // имя пользователя базы данных
-    password: 'hfEqeWmoMLhFvQY0bqxY', // пароль пользователя базы данных
-    database: 'admin_ecoignatevo', // имя базы данных
-    port: 3306 // порт базы данных (по умолчанию 3306 для MySQL)
+    host: 'localhost',
+    user: 'admin_ecoignatevo',
+    password: 'hfEqeWmoMLhFvQY0bqxY',
+    database: 'admin_ecoignatevo',
+    port: 3306
 });
+
 const dsn = {
     host:     'localhost',
     user:     'admin_ecoignatevo',
@@ -42,13 +43,15 @@ const dsn = {
 
 const mysqlEventWatcher = MySQLEvents(dsn);
 
-// Подключаемся к базе данных MySQL
+// Начинаем прослушивание событий
+mysqlEventWatcher.start();
 
-const watcher =mysqlEventWatcher.add(
-    'myDB.table.field.value',
+// Добавляем обработчик события INSERT INTO bookings
+const watcher = mysqlEventWatcher.add(
+    'admin_ecoignatevo.bookings.*',
     function (oldRow, newRow, event) {
-        //row inserted
-        if (oldRow === null) {
+        // Проверяем, что это событие INSERT
+        if (event.type === 'INSERT') {
             client.leads.add({
                 name: newRow.guest_count,
                 custom_fields: {
@@ -72,24 +75,17 @@ const watcher =mysqlEventWatcher.add(
                     'sale_channel_id': newRow.sale_channel_id,
                     'tariff_id': newRow.tariff_id,
                     'expired_at': newRow.expired_at,
-                } })
+                }
+            }).then((lead) => {
+                console.log(`New lead added: ${lead.id}`);
+            }).catch((error) => {
+                console.error(error);
+            });
         }
-
-        //row deleted
-        if (newRow === null) {
-            //delete code goes here
-        }
-
-        //row updated
-        if (oldRow !== null && newRow !== null) {
-            //update code goes here
-        }
-
-        //detailed event information
-        //console.log(event)
     },
-    'match this string or regex'
+    'INSERT INTO bookings'
 );
+
 // connection.getConnection((err, connection) => {
 //     if (err) throw err;
 //     console.log('Connected to the database!');
