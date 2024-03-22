@@ -48,21 +48,21 @@ connection.connect((err) => {
         return;
     }
     console.log('Connected to the database');
-    const query = 'SELECT bookings.*, clients.* FROM bookings INNER JOIN clients ON bookings.client_id = clients.id ORDER BY bookings.created_at DESC LIMIT 1';
-    connection.query(query, (err, results) => {
-        console.log(query);
-        if (err) {
-            console.error('Error executing database query:', err);
-            return;
-        }
-
-        if (results.length > 0) {
-            console.log('Booking data:', results[0]);
-            console.log('Client data:', results[0].client_id, results[0]);
-        } else {
-            console.log('No results found');
-        }
-    });
+    // const query = 'SELECT bookings.*, clients.* FROM bookings INNER JOIN clients ON bookings.client_id = clients.id ORDER BY bookings.created_at DESC LIMIT 1';
+    // connection.query(query, (err, results) => {
+    //     console.log(query);
+    //     if (err) {
+    //         console.error('Error executing database query:', err);
+    //         return;
+    //     }
+    //
+    //     if (results.length > 0) {
+    //         console.log('Booking data:', results[0]);
+    //         console.log('Client data:', results[0].client_id, results[0]);
+    //     } else {
+    //         console.log('No results found');
+    //     }
+    // });
     // const query = 'SELECT * FROM bookings ORDER BY created_at DESC LIMIT 1';
     // connection.query(query, (err, results) => {
     //     console.log(query);
