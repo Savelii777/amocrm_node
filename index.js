@@ -57,12 +57,12 @@ connection.connect((err) => {
             return;
         }
 
-        const leads = client.request.post('/api/v4/leads/',[
+        const leads = client.request.post('/api/v4/leads/', [
             {
-                "pipeline_id": 7948234,
                 "name": "Сделка для примера 1",
                 "created_by": 0,
                 "price": 20000,
+                "pipeline_id": 7948234, // Добавлено pipeline_id для первой сделки
             },
             {
                 "pipeline_id": 7948234,
@@ -77,6 +77,7 @@ connection.connect((err) => {
                 }
             }
         ]);
+
         leads.then(() => {
             console.log('Leads created successfully');
         }).catch((error) => {
