@@ -87,8 +87,8 @@ connection.connect((err) => {
     const query = 'SELECT * FROM bookings ORDER BY created_at DESC LIMIT 1'; // выбираем последнюю запись
     connection.query(query, (err, results) => {
         if (err) throw err;
-        results.forEach((row) => {
-            client.leads.create({
+        results.forEach(async (row) => {
+            const item = await client.leads.create({
                 name: row.notes,
                 // custom_fields: {
                 //     'room_id': row.room_id,
