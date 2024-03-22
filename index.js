@@ -48,9 +48,9 @@ connection.connect((err) => {
         return;
     }
     console.log('Connected to the database');
-    const query1 = 'SELECT bookings.*, clients.* FROM bookings INNER JOIN clients ON bookings.client_id = clients.id ORDER BY bookings.created_at DESC LIMIT 1';
-    connection.query1(query1, (err, results) => {
-        console.log(query1);
+    const query = 'SELECT bookings.*, clients.* FROM bookings INNER JOIN clients ON bookings.client_id = clients.id ORDER BY bookings.created_at DESC LIMIT 1';
+    connection.query1(query, (err, results) => {
+        console.log(query);
         function formatDate(date) {
             const year = date.getFullYear();
             const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -73,7 +73,7 @@ connection.connect((err) => {
 
         const leads = client.request.post('/api/v4/leads/complex', [
             {
-                "name": query1.id.toString(),
+                "name": query.id.toString(),
             "price": 5000,
                 "custom_fields_values": [
                     {
