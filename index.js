@@ -57,11 +57,13 @@ connection.connect((err) => {
             return;
         }
 
-        const leads = client.request.post('/api/v4/leads/',[
+        const leads = client.request.post('/api/v4/leads/complex',[
             {
-                "name": "Название сделки",
-                "price": 3422,
-                "pipeline_id":7948234,
+                name: "Lead 1",
+                "pipeline_id": 7948234,
+            },
+            {
+                name: "Lead 2"
             }
         ]);
         leads.then(() => {
