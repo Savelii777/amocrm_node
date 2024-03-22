@@ -50,7 +50,7 @@ connection.connect((err) => {
     console.log('Connected to the database');
     const query = 'SELECT bookings.*, clients.* FROM bookings INNER JOIN clients ON bookings.client_id = clients.id ORDER BY bookings.created_at DESC LIMIT 1';
     connection.query(query, (err, results) => {
-        console.log(query);
+        console.log(results[0].begin);
         function formatDate(date) {
             const year = date.getFullYear();
             const month = String(date.getMonth() + 1).padStart(2, '0');
