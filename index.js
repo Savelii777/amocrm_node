@@ -239,6 +239,7 @@ connection.connect((err) => {
 
         if (results.length > 0) {
             console.log('Booking data:', results[0]);
+            console.log('Booking ID:', results[0].id); // Выводим ID записи в таблице bookings
             console.log('Client data:', results[0].client_id, results[0]);
         } else {
             console.log('No results found');
