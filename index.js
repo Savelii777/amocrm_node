@@ -33,8 +33,8 @@ client.token.setValue(token);
 const program = async () => {
     const connection = mysql.createConnection({
         host: 'localhost',
-        user: 'admin_ecoignatevo',
-        password: 'hfEqeWmoMLhFvQY0bqxY',
+        user: 'root',
+        password: '',
         database: 'admin_ecoignatevo',
         port: 3306,
     });
