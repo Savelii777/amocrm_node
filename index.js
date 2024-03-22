@@ -86,6 +86,7 @@ connection.connect((err) => {
 
     const query = 'SELECT * FROM bookings ORDER BY created_at DESC LIMIT 1'; // выбираем последнюю запись
     connection.query(query, (err, results) => {
+        console.log(query);
         const leads =  client.contacts.create([
             {
                 name: "Lead 1"
