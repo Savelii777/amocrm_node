@@ -61,9 +61,7 @@ connection.connect((err) => {
             {
                 "name": "Название сделки",
                 "price": 3422,
-                "status_id":33929749,
                 "pipeline_id":3383152,
-                "request_id": "uns_qweasd"
             }
         ]);
         leads.then(() => {
