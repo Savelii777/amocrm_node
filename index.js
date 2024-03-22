@@ -90,28 +90,28 @@ connection.connect((err) => {
                 // "closest_task_at": null,
                 // "is_deleted": false,
                 "custom_fields_values": [
-                    // {
-                    //     "field_id": 1527477,
-                    //     "field_name": "Начало",
-                    //     "field_code": null,
-                    //     "field_type": "date",
-                    //     "values": [
-                    //         {
-                    //             "value": formattedToday
-                    //         }
-                    //     ]
-                    // },
-                    // {
-                    //     "field_id": 1527479,
-                    //     "field_name": "Конец",
-                    //     "field_code": null,
-                    //     "field_type": "date",
-                    //     "values": [
-                    //         {
-                    //             "value": formattedTomorrow
-                    //         }
-                    //     ]
-                    // },
+                    {
+                        "field_id": 1527477,
+                        "field_name": "Начало",
+                        "field_code": null,
+                        "field_type": "date",
+                        "values": [
+                            {
+                                "value": formattedToday
+                            }
+                        ]
+                    },
+                    {
+                        "field_id": 1527479,
+                        "field_name": "Конец",
+                        "field_code": null,
+                        "field_type": "date",
+                        "values": [
+                            {
+                                "value": formattedTomorrow
+                            }
+                        ]
+                    },
                     {
                         "field_id": 1527481,
                         "field_name": "Комментарий",
