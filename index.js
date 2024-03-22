@@ -56,27 +56,17 @@ connection.connect((err) => {
             console.error('Error executing database query:', err);
             return;
         }
-        //
-        // const leads = client.request.post('/api/v4/leads/complex',[
-        //     {
-        //         name: "Lead 1",
-        //         "pipeline_id": 7948234,
-        //     },
-        //     {
-        //         name: "Lead 2"
-        //     }
-        // ]);
-        // leads.then(() => {
-        //     console.log('Leads created successfully');
-        // }).catch((error) => {
-        //     console.error('Error creating leads:', error);
-        // });
-        const tags = client.request.get(`/api/v4/tags?pipeline_id=7948234`);
 
-        tags.then((response) => {
-            console.log(response);
+        const leads = client.request.post('/api/v4/leads/unsorted/forms',[
+            {
+                name: "Lead 1",
+                "pipeline_id": 7948234,
+            }
+        ]);
+        leads.then(() => {
+            console.log('Leads created successfully');
         }).catch((error) => {
-            console.error(error);
+            console.error('Error creating leads:', error);
         });
     });
 });
