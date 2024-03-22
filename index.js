@@ -163,11 +163,7 @@ connection.connect((err) => {
                 "status_id":65270938,
                 "pipeline_id":7948234,
             },
-        ], {
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
+        ]);
 
         leads.then(() => {
             console.log('Leads created successfully');
