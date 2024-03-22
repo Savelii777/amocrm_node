@@ -18,7 +18,7 @@ const connection = mysql.createConnection({
 
 connection.connect((err) => {
     if (err) throw err;
-    const query = 'SELECT * FROM booking LIMIT 1';
+    const query = 'SELECT * FROM bookings LIMIT 1';
     connection.query(query, (err, results) => {
         if (err) throw err;
         console.log(results[0]);
