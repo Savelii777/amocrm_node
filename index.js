@@ -59,7 +59,6 @@ connection.connect((err) => {
                     console.error('Error writing to file:', err);
                     return;
                 }
-
                 console.log('ID successfully written to file');
             });
         }
@@ -239,8 +238,9 @@ connection.connect((err) => {
             },
         ]);
 
-        leads.then(() => {
-            console.log('Leads created successfully');
+        leads.then((createdLead) => {
+            const dealId = createdLead.id;
+            console.log('Lead created successfully with ID:', dealId);
         }).catch((error) => {
             console.error('Error creating leads:', error);
         });
