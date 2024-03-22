@@ -73,7 +73,7 @@ connection.connect((err) => {
 
         const leads = client.request.post('/api/v4/leads/complex', [
             {
-                "name": query.id + "",
+                "name": results[0].id + "",
             "price": 5000,
                 "custom_fields_values": [
                     {
