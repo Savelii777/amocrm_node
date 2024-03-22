@@ -2,8 +2,10 @@ const http = require('http');
 const express = require('express');
 const { Client } = require('amocrm-js');
 const cors = require('cors');
-const mysql = require('mysql2');
-const MySQLEvents = require('mysql-events');
+const mysql = require('mysql');
+const MySQLEvents = require('@rodrigogs/mysql-events');
+const os = require('os');
+
 
 const app = express();
 app.use(cors());
@@ -27,70 +29,66 @@ const client = new Client({
 client.token.setValue(token);
 
 
-const connection = mysql.createConnection({
-    host: 'localhost',
-    user: 'admin_ecoignatevo',
-    password: 'hfEqeWmoMLhFvQY0bqxY',
-    database: 'admin_ecoignatevo',
-    port: 3306
-});
 
-const dsn = {
-    host:     'localhost',
-    user:     'admin_ecoignatevo',
-    password: 'hfEqeWmoMLhFvQY0bqxY',
+const program = async () => {
+    const connection = mysql.createConnection({
+        host: 'localhost',
+        user: 'admin_ecoignatevo',
+        password: 'hfEqeWmoMLhFvQY0bqxY',
+        database: 'admin_ecoignatevo',
+        port: 3306,
+    });
+
+    const instance = new MySQLEvents(connection, {
+        startAtEnd: true,
+        excludedSchemas: {
+            mysql: true,
+        },
+    });
+
+    await instance.start();
+
+    instance.addTrigger({
+        name: 'Monitor Bookings',
+        expression: 'admin_ecoignatevo.bookings.*', // listen to admin_ecoignatevo database bookings table only
+        statement: MySQLEvents.STATEMENTS.INSERT, // listen only insert statements
+        onEvent: (event) => { // You will receive the events here
+            const row = event.affectedRows[0].after;
+            client.leads.add({
+                name: row.guest_count,
+                custom_fields: {
+                    'room_id': row.room_id,
+                    'client_id': row.client_id,
+                    'notes': row.notes,
+                    'begin': row.begin,
+                    'end': row.end,
+                    'user_id': row.user_id,
+                    'created_at': row.created_at,
+                    'updated_at': row.updated_at,
+                    'booking_status_id': row.booking_status_id,
+                    'deleted_at': row.deleted_at,
+                    'group_id': row.group_id,
+                    'bed_id': row.bed_id,
+                    'sum_prepaid': row.sum_prepaid,
+                    'sum_full': row.sum_full,
+                    'percent_off': row.percent_off,
+                    'guest_count': row.guest_count,
+                    'parent_id': row.parent_id,
+                    'sale_channel_id': row.sale_channel_id,
+                    'tariff_id': row.tariff_id,
+                    'expired_at': row.expired_at,
+                },
+            });
+        },
+    });
+
+    instance.on(MySQLEvents.EVENTS.CONNECTION_ERROR, console.error);
+    instance.on(MySQLEvents.EVENTS.ZONGJI_ERROR, console.error);
 };
 
-const mysqlEventWatcher = require('mysql2/promise').createConnection(dsn);
-
-// Подключаемся к базе данных MySQL
-connection.connect((err) => {
-    if (err) throw err;
-    console.log('Connected to the database!');
-
-    // Начинаем прослушивание событий
-    mysqlEventWatcher.start((err) => {
-        if (err) throw err;
-        console.log('Listening for events...');
-    });
-
-    // Обрабатываем событие insert
-    mysqlEventWatcher.on('admin_ecoignatevo.bookings.insert', (data) => {
-        const row = data.rows[0];
-        console.log(`New booking added: ${JSON.stringify(row)}`);
-
-        // Создаем новую сделку в AmoCRM
-        client.leads.add({
-            name: row.guest_count,
-            custom_fields: {
-                'room_id': row.room_id,
-                'client_id': row.client_id,
-                'notes': row.notes,
-                'begin': row.begin,
-                'end': row.end,
-                'user_id': row.user_id,
-                'created_at': row.created_at,
-                'updated_at': row.updated_at,
-                'booking_status_id': row.booking_status_id,
-                'deleted_at': row.deleted_at,
-                'group_id': row.group_id,
-                'bed_id': row.bed_id,
-                'sum_prepaid': row.sum_prepaid,
-                'sum_full': row.sum_full,
-                'percent_off': row.percent_off,
-                'guest_count': row.guest_count,
-                'parent_id': row.parent_id,
-                'sale_channel_id': row.sale_channel_id,
-                'tariff_id': row.tariff_id,
-                'expired_at': row.expired_at,
-            },
-        }).then((lead) => {
-            console.log(`New lead added: ${lead.id}`);
-        }).catch((error) => {
-            console.error(error);
-        });
-    });
-});
+program()
+    .then(() => console.log('Waiting for database events...'))
+    .catch(console.error);
 
 
 // connection.getConnection((err, connection) => {
