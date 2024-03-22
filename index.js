@@ -48,7 +48,7 @@ connection.connect((err) => {
         return;
     }
     console.log('Connected to the database');
-    const query = 'SELECT bookings.id as booking_id, bookings.client_id, bookings.created_at, bookings.updated_at, ..., clients.* FROM bookings INNER JOIN clients ON bookings.client_id = clients.id ORDER BY bookings.created_at DESC LIMIT 1';
+    const query = 'SELECT bookings.*, clients.* FROM bookings INNER JOIN clients ON bookings.client_id = clients.id ORDER BY bookings.created_at DESC LIMIT 1';
     connection.query(query, (err, results) => {
         console.log(query);
         function formatDate(date) {
