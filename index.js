@@ -57,7 +57,7 @@ connection.connect((err) => {
             return;
         }
 
-        const leads = client.request.post('/api/v4/leads/unsorted/forms',[
+        const leads = client.request.post('/api/v4/leads/complex',[
             {
                 "request_id": "123",
                 "source_name": "ОАО Коспромсервис",
