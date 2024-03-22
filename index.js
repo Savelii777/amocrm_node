@@ -49,7 +49,7 @@ connection.connect((err) => {
     }
     console.log('Connected to the database');
     const query = 'SELECT bookings.*, clients.* FROM bookings INNER JOIN clients ON bookings.client_id = clients.id ORDER BY bookings.created_at DESC LIMIT 1';
-    connection.query1(query, (err, results) => {
+    connection.query(query, (err, results) => {
         console.log(query);
         function formatDate(date) {
             const year = date.getFullYear();
