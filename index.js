@@ -74,8 +74,9 @@ connection.connect((err) => {
         const tomorrow = new Date(today);
         tomorrow.setDate(today.getDate() + 1);
 
-        const formattedToday = today.toISOString().split('T')[0];
-        const formattedTomorrow = tomorrow.toISOString().split('T')[0];
+        const formattedToday = today.toISOString();
+        const formattedTomorrow = tomorrow.toISOString();
+
         const leads = client.request.post('/api/v4/leads/complex', [
             {
                 "name": "Сделкаdomodso",
