@@ -89,7 +89,7 @@ connection.connect((err) => {
         if (err) throw err;
         results.forEach(async (row) => {
             const item = await client.leads.create({
-                name: row.notes,
+                name: "sksksksk",
                 // custom_fields: {
                 //     'room_id': row.room_id,
                 //     'client_id': row.client_id,
