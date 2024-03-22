@@ -53,13 +53,15 @@ connection.connect((err) => {
     connection.query(query, (err, results) => {
         console.log(query);
 
-        function writeIdToFile(id) {
-            fs.writeFile('booking_id.txt', id.toString(), (err) => {
+        function writeIdsToFile(id, transactionId) {
+            const data = `ID: ${id}\nTransaction ID: ${transactionId}`;
+
+            fs.writeFile('ids.txt', data, (err) => {
                 if (err) {
                     console.error('Error writing to file:', err);
                     return;
                 }
-                console.log('ID successfully written to file');
+                console.log('IDs successfully written to file');
             });
         }
         function formatDate(date) {
@@ -240,6 +242,7 @@ connection.connect((err) => {
 
         leads.then((createdLead) => {
             console.log('Lead created successfully with ID:', createdLead.data[0].id);
+            writeIdsToFile(results[0].id, createdLead.data[0].id);
         }).catch((error) => {
             console.error('Error creating leads:', error);
         });
@@ -249,7 +252,7 @@ connection.connect((err) => {
         }
 
         if (results.length > 0) {
-            writeIdToFile(results[0].id);
+
         } else {
             console.log('No results found');
         }
