@@ -5,6 +5,7 @@
     "express": "^4.18.3",
     "http": "^0.0.1-security",
     "mysql": "^2.18.1",
-    "mysql-events": "^0.0.11"
+    "mysql-events": "^0.0.11",
+    "mysql2": "^3.9.2"
   }
 }

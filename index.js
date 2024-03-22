@@ -2,7 +2,7 @@ const http = require('http');
 const express = require('express');
 const { Client } = require('amocrm-js');
 const cors = require('cors');
-const mysql = require('mysql');
+const mysql = require('mysql2');
 const MySQLEvents = require('mysql-events');
 
 const app = express();
@@ -36,57 +36,62 @@ const connection = mysql.createConnection({
 });
 
 const dsn = {
-    host: 'localhost',
-    user: 'admin_ecoignatevo',
+    host:     'localhost',
+    user:     'admin_ecoignatevo',
     password: 'hfEqeWmoMLhFvQY0bqxY',
-    database: 'admin_ecoignatevo',
-    port: 3306
 };
 
-const mysqlEventWatcher = MySQLEvents(dsn);
+const mysqlEventWatcher = require('mysql2/promise').createConnection(dsn);
 
-// Начинаем прослушивание событий
+// Подключаемся к базе данных MySQL
+connection.connect((err) => {
+    if (err) throw err;
+    console.log('Connected to the database!');
 
-// Добавляем обработчик события INSERT INTO bookings
-const watcher = mysqlEventWatcher.add(
-    'admin_ecoignatevo.bookings.*',
-    function (oldRow, newRow, event) {
-        console.log("llll")
-        // Проверяем, что это событие INSERT
-        if (event.type === 'INSERT') {
-            client.leads.add({
-                name: newRow.guest_count,
-                custom_fields: {
-                    'room_id': newRow.room_id,
-                    'client_id': newRow.client_id,
-                    'notes': newRow.notes,
-                    'begin': newRow.begin,
-                    'end': newRow.end,
-                    'user_id': newRow.user_id,
-                    'created_at': newRow.created_at,
-                    'updated_at': newRow.updated_at,
-                    'booking_status_id': newRow.booking_status_id,
-                    'deleted_at': newRow.deleted_at,
-                    'group_id': newRow.group_id,
-                    'bed_id': newRow.bed_id,
-                    'sum_prepaid': newRow.sum_prepaid,
-                    'sum_full': newRow.sum_full,
-                    'percent_off': newRow.percent_off,
-                    'guest_count': newRow.guest_count,
-                    'parent_id': newRow.parent_id,
-                    'sale_channel_id': newRow.sale_channel_id,
-                    'tariff_id': newRow.tariff_id,
-                    'expired_at': newRow.expired_at,
-                }
-            }).then((lead) => {
-                console.log(`New lead added: ${lead.id}`);
-            }).catch((error) => {
-                console.error(error);
-            });
-        }
-    },
-    'INSERT INTO bookings'
-);
+    // Начинаем прослушивание событий
+    mysqlEventWatcher.start((err) => {
+        if (err) throw err;
+        console.log('Listening for events...');
+    });
+
+    // Обрабатываем событие insert
+    mysqlEventWatcher.on('admin_ecoignatevo.bookings.insert', (data) => {
+        const row = data.rows[0];
+        console.log(`New booking added: ${JSON.stringify(row)}`);
+
+        // Создаем новую сделку в AmoCRM
+        client.leads.add({
+            name: row.guest_count,
+            custom_fields: {
+                'room_id': row.room_id,
+                'client_id': row.client_id,
+                'notes': row.notes,
+                'begin': row.begin,
+                'end': row.end,
+                'user_id': row.user_id,
+                'created_at': row.created_at,
+                'updated_at': row.updated_at,
+                'booking_status_id': row.booking_status_id,
+                'deleted_at': row.deleted_at,
+                'group_id': row.group_id,
+                'bed_id': row.bed_id,
+                'sum_prepaid': row.sum_prepaid,
+                'sum_full': row.sum_full,
+                'percent_off': row.percent_off,
+                'guest_count': row.guest_count,
+                'parent_id': row.parent_id,
+                'sale_channel_id': row.sale_channel_id,
+                'tariff_id': row.tariff_id,
+                'expired_at': row.expired_at,
+            },
+        }).then((lead) => {
+            console.log(`New lead added: ${lead.id}`);
+        }).catch((error) => {
+            console.error(error);
+        });
+    });
+});
+
 
 // connection.getConnection((err, connection) => {
 //     if (err) throw err;
