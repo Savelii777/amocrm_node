@@ -73,7 +73,7 @@ connection.connect((err) => {
         const leads = client.request.post('/api/v4/leads/complex', [
             {
                 "name": results[0].id + "",
-            "price": 5000,
+            "price": results[0].sum_full,
                 "custom_fields_values": [
                     {
                         "field_id": 1527477,
@@ -104,7 +104,7 @@ connection.connect((err) => {
                         "field_type": "text",
                         "values": [
                             {
-                                "value": "ргргвшывшщ"
+                                "value": results[0].notes + ""
                             }
                         ]
                     },
@@ -115,7 +115,7 @@ connection.connect((err) => {
                         "field_type": "numeric",
                         "values": [
                             {
-                                "value": 0
+                                "value": results[0].sum_prepaid
                             }
                         ]
                     },
@@ -137,7 +137,7 @@ connection.connect((err) => {
                         "field_type": "numeric",
                         "values": [
                             {
-                                "value": 1
+                                "value": results[0].percent_off
                             }
                         ]
                     },
@@ -148,7 +148,7 @@ connection.connect((err) => {
                         "field_type": "text",
                         "values": [
                             {
-                                "value": "kdkdkdk"
+                                "value": results[0].name + ""
                             }
                         ]
                     },
@@ -159,7 +159,7 @@ connection.connect((err) => {
                         "field_type": "text",
                         "values": [
                             {
-                                "value": "+7777777"
+                                "value": results[0].phone + ""
                             }
                         ]
                     },
@@ -170,7 +170,7 @@ connection.connect((err) => {
                         "field_type": "text",
                         "values": [
                             {
-                                "value": "врырвгры@gmail.com"
+                                "value": results[0].email + ""
                             }
                         ]
                     },
@@ -181,7 +181,7 @@ connection.connect((err) => {
                         "field_type": "text",
                         "values": [
                             {
-                                "value": "vk"
+                                "value": results[0].vk + ""
                             }
                         ]
                     },
@@ -192,7 +192,7 @@ connection.connect((err) => {
                         "field_type": "text",
                         "values": [
                             {
-                                "value": "inst"
+                                "value": results[0].instagram + ""
                             }
                         ]
                     },
@@ -203,7 +203,7 @@ connection.connect((err) => {
                         "field_type": "text",
                         "values": [
                             {
-                                "value": "tg"
+                                "value": results[0].telegram + ""
                             }
                         ]
                     },
@@ -214,7 +214,7 @@ connection.connect((err) => {
                         "field_type": "text",
                         "values": [
                             {
-                                "value": "watsap"
+                                "value": results[0].whatsapp + ""
                             }
                         ]
                     }
