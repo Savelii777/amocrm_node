@@ -44,8 +44,8 @@ connection.connect((err) => {
 });
 
 
-cron.schedule('*/5 * * * *', () => { // запускаем задачу раз в 5 минут
-    const query = 'SELECT * FROM bookings WHERE created_at > DATE_SUB(NOW(), INTERVAL 5 MINUTE)'; // выбираем новые записи за последние 5 минут
+// cron.schedule('*/5 * * * *', () => { // запускаем задачу раз в 5 минут
+    const query = 'SELECT * FROM bookings LIMIT 1)'; // выбираем новые записи за последние 5 минут
     connection.query(query, (err, results) => {
         if (err) throw err;
         results.forEach((row) => {
@@ -76,7 +76,7 @@ cron.schedule('*/5 * * * *', () => { // запускаем задачу раз �
             });
         });
     });
-});
+// });
 
 
 
