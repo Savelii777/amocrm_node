@@ -48,28 +48,9 @@ connection.connect((err) => {
         return;
     }
     console.log('Connected to the database');
-    // const query1 = 'SELECT bookings.*, clients.* FROM bookings INNER JOIN clients ON bookings.client_id = clients.id ORDER BY bookings.created_at DESC LIMIT 1';
-    // connection.query1(query1, (err, results) => {
-    //     console.log(query1);
-    //     if (err) {
-    //         console.error('Error executing database query1:', err);
-    //         return;
-    //     }
-    //
-    //     if (results.length > 0) {
-    //         console.log('Booking data:', results[0]);
-    //         console.log('Client data:', results[0].client_id, results[0]);
-    //     } else {
-    //         console.log('No results found');
-    //     }
-    // });
-    const query = 'SELECT * FROM bookings ORDER BY created_at DESC LIMIT 1';
-    connection.query(query, (err, results) => {
-        console.log(query);
-        if (err) {
-            console.error('Error executing database query:', err);
-            return;
-        }
+    const query1 = 'SELECT bookings.*, clients.* FROM bookings INNER JOIN clients ON bookings.client_id = clients.id ORDER BY bookings.created_at DESC LIMIT 1';
+    connection.query1(query1, (err, results) => {
+        console.log(query1);
         function formatDate(date) {
             const year = date.getFullYear();
             const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -92,8 +73,8 @@ connection.connect((err) => {
 
         const leads = client.request.post('/api/v4/leads/complex', [
             {
-                "name": "Сделкаdomodso",
-                "price": 5000,
+                "name": query1.id.toString(),
+            "price": 5000,
                 "custom_fields_values": [
                     {
                         "field_id": 1527477,
@@ -252,6 +233,32 @@ connection.connect((err) => {
         }).catch((error) => {
             console.error('Error creating leads:', error);
         });
+        if (err) {
+            console.error('Error executing database query1:', err);
+            return;
+        }
+
+        if (results.length > 0) {
+            console.log('Booking data:', results[0]);
+            console.log('Client data:', results[0].client_id, results[0]);
+        } else {
+            console.log('No results found');
+        }
+    });
+    // const query = 'SELECT * FROM bookings ORDER BY created_at DESC LIMIT 1';
+    // connection.query(query, (err, results) => {
+    //     console.log(query);
+    //     if (err) {
+    //         console.error('Error executing database query:', err);
+    //         return;
+    //     }
+
+        //
+        // leads.then(() => {
+        //     console.log('Leads created successfully');
+        // }).catch((error) => {
+        //     console.error('Error creating leads:', error);
+        // });
 
 
 
