@@ -83,169 +83,169 @@ connection.connect((err) => {
         const formattedTomorrow = formatDate(tomorrow);
 
         const guestCount = parseInt(results[0].guest_count, 10);
-        const leads = client.request.post('/api/v4/leads/complex', [
-            {
-                "name": results[0].id + "",
-            "price": results[0].sum_full,
-                "custom_fields_values": [
-                    {
-                        "field_id": 1527477,
-                        "field_name": "Начало",
-                        "field_code": null,
-                        "field_type": "date",
-                        "values": [
-                            {
-                                "value": formattedToday
-                            }
-                        ]
-                    },
-                    {
-                        "field_id": 1527479,
-                        "field_name": "Конец",
-                        "field_code": null,
-                        "field_type": "date",
-                        "values": [
-                            {
-                                "value": formattedTomorrow
-                            }
-                        ]
-                    },
-                    {
-                        "field_id": 1527481,
-                        "field_name": "Комментарий",
-                        "field_code": null,
-                        "field_type": "text",
-                        "values": [
-                            {
-                                "value": results[0].notes + ""
-                            }
-                        ]
-                    },
-                    {
-                        "field_id": 1527483,
-                        "field_name": "Предоплата",
-                        "field_code": null,
-                        "field_type": "numeric",
-                        "values": [
-                            {
-                                "value": results[0].sum_prepaid
-                            }
-                        ]
-                    },
-                    {
-                        "field_id": 1527491,
-                        "field_name": "Скидка",
-                        "field_code": null,
-                        "field_type": "numeric",
-                        "values": [
-                            {
-                                "value": results[0].percent_off
-                            }
-                        ]
-                    },
-                    {
-                        "field_id": 1527493,
-                        "field_name": "Количество гостей",
-                        "field_code": null,
-                        "field_type": "numeric",
-                        "values": [
-                            {
-                                "value": guestCount
-                            }
-                        ]
-                    },
-                    {
-                        "field_id": 1527495,
-                        "field_name": "Имя",
-                        "field_code": null,
-                        "field_type": "text",
-                        "values": [
-                            {
-                                "value": results[0].name + ""
-                            }
-                        ]
-                    },
-                    {
-                        "field_id": 1527497,
-                        "field_name": "Телефон",
-                        "field_code": null,
-                        "field_type": "text",
-                        "values": [
-                            {
-                                "value": results[0].phone + ""
-                            }
-                        ]
-                    },
-                    {
-                        "field_id": 1527499,
-                        "field_name": "Почта",
-                        "field_code": null,
-                        "field_type": "text",
-                        "values": [
-                            {
-                                "value": results[0].email + ""
-                            }
-                        ]
-                    },
-                    {
-                        "field_id": 1527501,
-                        "field_name": "ВК",
-                        "field_code": null,
-                        "field_type": "text",
-                        "values": [
-                            {
-                                "value": results[0].vk + ""
-                            }
-                        ]
-                    },
-                    {
-                        "field_id": 1527503,
-                        "field_name": "Инстаграм",
-                        "field_code": null,
-                        "field_type": "text",
-                        "values": [
-                            {
-                                "value": results[0].instagram + ""
-                            }
-                        ]
-                    },
-                    {
-                        "field_id": 1527505,
-                        "field_name": "Телеграм",
-                        "field_code": null,
-                        "field_type": "text",
-                        "values": [
-                            {
-                                "value": results[0].telegram + ""
-                            }
-                        ]
-                    },
-                    {
-                        "field_id": 1527507,
-                        "field_name": "Ватсап",
-                        "field_code": null,
-                        "field_type": "text",
-                        "values": [
-                            {
-                                "value": results[0].whatsapp + ""
-                            }
-                        ]
-                    }
-                ],
-                "score": null,
-                "account_id": 31623822,
-                "created_at":1608905348,
-                "status_id":65270938,
-                "pipeline_id":7948234,
-            },
-        ]);
-
-        leads.then((createdLead) => {
-            console.log('Lead created successfully with ID:', createdLead.data[0].id);
-            writeIdsToFile(results[0].id, createdLead.data[0].id);
-        }).catch((error) => {
-            console.error('Error creating leads:', error);
-        });
+        // const leads = client.request.post('/api/v4/leads/complex', [
+        //     {
+        //         "name": results[0].id + "",
+        //     "price": results[0].sum_full,
+        //         "custom_fields_values": [
+        //             {
+        //                 "field_id": 1527477,
+        //                 "field_name": "Начало",
+        //                 "field_code": null,
+        //                 "field_type": "date",
+        //                 "values": [
+        //                     {
+        //                         "value": formattedToday
+        //                     }
+        //                 ]
+        //             },
+        //             {
+        //                 "field_id": 1527479,
+        //                 "field_name": "Конец",
+        //                 "field_code": null,
+        //                 "field_type": "date",
+        //                 "values": [
+        //                     {
+        //                         "value": formattedTomorrow
+        //                     }
+        //                 ]
+        //             },
+        //             {
+        //                 "field_id": 1527481,
+        //                 "field_name": "Комментарий",
+        //                 "field_code": null,
+        //                 "field_type": "text",
+        //                 "values": [
+        //                     {
+        //                         "value": results[0].notes + ""
+        //                     }
+        //                 ]
+        //             },
+        //             {
+        //                 "field_id": 1527483,
+        //                 "field_name": "Предоплата",
+        //                 "field_code": null,
+        //                 "field_type": "numeric",
+        //                 "values": [
+        //                     {
+        //                         "value": results[0].sum_prepaid
+        //                     }
+        //                 ]
+        //             },
+        //             {
+        //                 "field_id": 1527491,
+        //                 "field_name": "Скидка",
+        //                 "field_code": null,
+        //                 "field_type": "numeric",
+        //                 "values": [
+        //                     {
+        //                         "value": results[0].percent_off
+        //                     }
+        //                 ]
+        //             },
+        //             {
+        //                 "field_id": 1527493,
+        //                 "field_name": "Количество гостей",
+        //                 "field_code": null,
+        //                 "field_type": "numeric",
+        //                 "values": [
+        //                     {
+        //                         "value": guestCount
+        //                     }
+        //                 ]
+        //             },
+        //             {
+        //                 "field_id": 1527495,
+        //                 "field_name": "Имя",
+        //                 "field_code": null,
+        //                 "field_type": "text",
+        //                 "values": [
+        //                     {
+        //                         "value": results[0].name + ""
+        //                     }
+        //                 ]
+        //             },
+        //             {
+        //                 "field_id": 1527497,
+        //                 "field_name": "Телефон",
+        //                 "field_code": null,
+        //                 "field_type": "text",
+        //                 "values": [
+        //                     {
+        //                         "value": results[0].phone + ""
+        //                     }
+        //                 ]
+        //             },
+        //             {
+        //                 "field_id": 1527499,
+        //                 "field_name": "Почта",
+        //                 "field_code": null,
+        //                 "field_type": "text",
+        //                 "values": [
+        //                     {
+        //                         "value": results[0].email + ""
+        //                     }
+        //                 ]
+        //             },
+        //             {
+        //                 "field_id": 1527501,
+        //                 "field_name": "ВК",
+        //                 "field_code": null,
+        //                 "field_type": "text",
+        //                 "values": [
+        //                     {
+        //                         "value": results[0].vk + ""
+        //                     }
+        //                 ]
+        //             },
+        //             {
+        //                 "field_id": 1527503,
+        //                 "field_name": "Инстаграм",
+        //                 "field_code": null,
+        //                 "field_type": "text",
+        //                 "values": [
+        //                     {
+        //                         "value": results[0].instagram + ""
+        //                     }
+        //                 ]
+        //             },
+        //             {
+        //                 "field_id": 1527505,
+        //                 "field_name": "Телеграм",
+        //                 "field_code": null,
+        //                 "field_type": "text",
+        //                 "values": [
+        //                     {
+        //                         "value": results[0].telegram + ""
+        //                     }
+        //                 ]
+        //             },
+        //             {
+        //                 "field_id": 1527507,
+        //                 "field_name": "Ватсап",
+        //                 "field_code": null,
+        //                 "field_type": "text",
+        //                 "values": [
+        //                     {
+        //                         "value": results[0].whatsapp + ""
+        //                     }
+        //                 ]
+        //             }
+        //         ],
+        //         "score": null,
+        //         "account_id": 31623822,
+        //         "created_at":1608905348,
+        //         "status_id":65270938,
+        //         "pipeline_id":7948234,
+        //     },
+        // ]);
+        //
+        // leads.then((createdLead) => {
+        //     console.log('Lead created successfully with ID:', createdLead.data[0].id);
+        //     writeIdsToFile(results[0].id, createdLead.data[0].id);
+        // }).catch((error) => {
+        //     console.error('Error creating leads:', error);
+        // });
         if (err) {
             console.error('Error executing database query1:', err);
             return;
@@ -275,27 +275,27 @@ connection.connect((err) => {
 
 
 
-        // const statuses = client.request.get(`/api/v4/leads/pipelines/7948234/statuses?limit=10&offset=20`);
+        const statuses = client.request.get(`/api/v4/leads/pipelines/7948234/statuses?limit=10&offset=20`);
 
-        // statuses.then((response) => {
-        //     console.log(JSON.stringify(response.data, null, 2)); // Красивый вывод всего объекта с отступами
-        //     printNestedData(response.data); // Рекурсивный вывод всех вложенных элементов
-        // }).catch((error) => {
-        //     console.error(error);
-        // });
+        statuses.then((response) => {
+            console.log(JSON.stringify(response.data, null, 2)); // Красивый вывод всего объекта с отступами
+            printNestedData(response.data); // Рекурсивный вывод всех вложенных элементов
+        }).catch((error) => {
+            console.error(error);
+        });
 
-        // function printNestedData(data) {
-        //     for (let key in data) {
-        //         if (data.hasOwnProperty(key)) {
-        //             if (typeof data[key] === 'object' && data[key] !== null) {
-        //                 console.log(`${key}:`);
-        //                 printNestedData(data[key]); // Рекурсивный вызов для вложенных объектов
-        //             } else {
-        //                 console.log(`${key}: ${data[key]}`);
-        //             }
-        //         }
-        //     }
-        // }
+        function printNestedData(data) {
+            for (let key in data) {
+                if (data.hasOwnProperty(key)) {
+                    if (typeof data[key] === 'object' && data[key] !== null) {
+                        console.log(`${key}:`);
+                        printNestedData(data[key]); // Рекурсивный вызов для вложенных объектов
+                    } else {
+                        console.log(`${key}: ${data[key]}`);
+                    }
+                }
+            }
+        }
 
 
 
