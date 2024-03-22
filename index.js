@@ -7,35 +7,6 @@ const mysql = require('mysql');
 const app = express();
 app.use(cors());
 
-
-const connection = mysql.createConnection({
-    host: 'localhost', // адрес сервера (для локальной базы данных это обычно 'localhost')
-    user: 'admin_ecoignatevo', // имя пользователя базы данных
-    password: 'hfEqeWmoMLhFvQY0bqxY', // пароль пользователя базы данных
-    database: 'admin_ecoignatevo', // имя базы данных
-    port: 3306 // порт базы данных (по умолчанию 3306 для MySQL)
-});
-
-connection.connect((err) => {
-    if (err) throw err;
-    const query = 'SELECT * FROM bookings LIMIT 1';
-    connection.query(query, (err, results) => {
-        if (err) throw err;
-        console.log(results[0]);
-    });
-    // console.log('Connected to the database!');
-    // const query = "INSERT INTO bookings (room_id, client_id, notes, begin, end, user_id, created_at, updated_at, booking_status_id, deleted_at, group_id, bed_id, sum_prepaid, sum_full, percent_off, guest_count, parent_id, sale_channel_id, tariff_id, expired_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-    // const values = [
-    //     1, 1, 'Some notes', new Date(), new Date(Date.now() + 86400000), 1, new Date(), new Date(), 1, null, 1, 1, 100.00, 200.00, 10.00, '2 adults, 1 child', 1, 1, 1, null
-    // ];
-    // connection.query(query, values, (err, result) => {
-    //     if (err) throw err;
-    //     console.log('Inserted a new record with ID: ', result.insertId);
-    // });
-});
-
-
-
 const token = {
     "token_type": "Bearer",
     "expires_in": 86400,
@@ -54,21 +25,77 @@ const client = new Client({
 
 client.token.setValue(token);
 
-app.get('/leads', async (req, res) => {
-    try {
-        const pagination = await client.leads.get();
-        console.log(pagination)
-        const leads = pagination.getData().map(lead => ({
-            id: lead.id,
-            name: lead.name,
-            // add other properties that you need
-        }));
-        res.json(leads);
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Internal Server Error');
-    }
+
+const connection = mysql.createConnection({
+    host: 'localhost', // адрес сервера (для локальной базы данных это обычно 'localhost')
+    user: 'admin_ecoignatevo', // имя пользователя базы данных
+    password: 'hfEqeWmoMLhFvQY0bqxY', // пароль пользователя базы данных
+    database: 'admin_ecoignatevo', // имя базы данных
+    port: 3306 // порт базы данных (по умолчанию 3306 для MySQL)
 });
+
+connection.connect((err) => {
+    if (err) throw err;
+    console.log('Connected to the database!');
+
+    const bookingsTable = new mysql.Table('bookings');
+    connection.query('SELECT * FROM bookings', (err, rows) => {
+        if (err) throw err;
+        bookingsTable.create(rows);
+        bookingsTable.on('insert', (row) => {
+            console.log(`New booking added: ${JSON.stringify(row)}`);
+            // Create a new lead in AmoCRM
+            client.leads.add({
+                name: row.guest_count,
+                custom_fields: {
+                    'room_id': row.room_id,
+                    'client_id': row.client_id,
+                    'notes': row.notes,
+                    'begin': row.begin,
+                    'end': row.end,
+                    'user_id': row.user_id,
+                    'created_at': row.created_at,
+                    'updated_at': row.updated_at,
+                    'booking_status_id': row.booking_status_id,
+                    'deleted_at': row.deleted_at,
+                    'group_id': row.group_id,
+                    'bed_id': row.bed_id,
+                    'sum_prepaid': row.sum_prepaid,
+                    'sum_full': row.sum_full,
+                    'percent_off': row.percent_off,
+                    'guest_count': row.guest_count,
+                    'parent_id': row.parent_id,
+                    'sale_channel_id': row.sale_channel_id,
+                    'tariff_id': row.tariff_id,
+                    'expired_at': row.expired_at,
+                },
+            }).then((lead) => {
+                console.log(`New lead added: ${lead.id}`);
+            }).catch((error) => {
+                console.error(error);
+            });
+        });
+    });
+});
+
+
+
+
+// app.get('/leads', async (req, res) => {
+//     try {
+//         const pagination = await client.leads.get();
+//         console.log(pagination)
+//         const leads = pagination.getData().map(lead => ({
+//             id: lead.id,
+//             name: lead.name,
+//             // add other properties that you need
+//         }));
+//         res.json(leads);
+//     } catch (error) {
+//         console.error(error);
+//         res.status(500).send('Internal Server Error');
+//     }
+// });
 
 
 const PORT = process.env.PORT || 3000;
