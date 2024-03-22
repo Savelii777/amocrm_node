@@ -78,8 +78,88 @@ connection.connect((err) => {
         const formattedTomorrow = tomorrow.toISOString().split('T')[0];
         const leads = client.request.post('/api/v4/leads/complex', [
             {
-                "name": "Название сделки",
+                "name": "Сделка #7354481",
                 "price": 5000,
+                "responsible_user_id": 10783318,
+                "group_id": 0,
+                "loss_reason_id": null,
+                "created_by": 10783318,
+                "updated_by": 10783318,
+                "closed_at": null,
+                "closest_task_at": null,
+                "is_deleted": false,
+                "custom_fields_values": [
+                    {
+                        "field_id": 1527477,
+                        "field_name": "Начало",
+                        "field_code": null,
+                        "field_type": "date",
+                        "values": [
+                            {
+                                "value": 1711227600
+                            }
+                        ]
+                    },
+                    {
+                        "field_id": 1527479,
+                        "field_name": "Конец",
+                        "field_code": null,
+                        "field_type": "date",
+                        "values": [
+                            {
+                                "value": 1711314000
+                            }
+                        ]
+                    },
+                    {
+                        "field_id": 1527481,
+                        "field_name": "Комментарий",
+                        "field_code": null,
+                        "field_type": "text",
+                        "values": [
+                            {
+                                "value": "ргргвшывшщ"
+                            }
+                        ]
+                    },
+                    {
+                        "field_id": 1527483,
+                        "field_name": "Предоплата",
+                        "field_code": null,
+                        "field_type": "numeric",
+                        "values": [
+                            {
+                                "value": "0"
+                            }
+                        ]
+                    },
+                    {
+                        "field_id": 1527485,
+                        "field_name": "Скидка",
+                        "field_code": null,
+                        "field_type": "text",
+                        "values": [
+                            {
+                                "value": "0"
+                            }
+                        ]
+                    },
+                    {
+                        "field_id": 1527487,
+                        "field_name": "Количество гостей",
+                        "field_code": null,
+                        "field_type": "text",
+                        "values": [
+                            {
+                                "value": "1"
+                            }
+                        ]
+                    }
+                ],
+                "score": null,
+                "account_id": 31623822,
+
+
                 // "custom_fields_values": [
                 //     {
                 //         "field_id": 1527477,
