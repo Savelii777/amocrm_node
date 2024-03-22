@@ -57,60 +57,73 @@ connection.connect((err) => {
             return;
         }
 
-        const leads = client.request.post('/api/v4/leads/complex',[
+        const leads = client.request.post('/api/v4/leads/unsorted/forms',[
             {
-                "request_id": "123",
-                "source_name": "ОАО Коспромсервис",
-                "source_uid": "6ae72b26-f45b-4739-9f09-d2dfb98d48a8",
-                "status_id": 31623822,
-                "pipeline_id": 7948234,
-                "created_at": 1590830520,
-                "_embedded": {
-                    "leads": [
+                "name": "Название сделки",
+                "price": 3422,
+                "_embedded":{
+                    "contacts":[
                         {
-                            "name": "Тех обслуживание",
-                            "visitor_uid": "5692210d-58d0-468c-acb2-dce7f93eef87",
-                            "price": 5000,
-                            "_embedded": {
-                                "tags": [
-                                    {
-                                        "name": "ПЕРЕГОВОРЫ"
-                                    }
-                                ]
-                            }
+                            "first_name":"Екатерина",
+                            "created_at":1608905348,
+                            "responsible_user_id":2004184,
+                            "updated_by":0,
                         }
                     ],
-                    "contacts": [
+                    "companies":[
                         {
-                            "name": 234,
-                            "first_name": "123213",
-                            "last_name": 234,
-                            "custom_fields_values": [
+                            "name":"ООО Рога и Копыта"
+                        }
+                    ]
+                },
+                "created_at":1608905348,
+                "responsible_user_id":2004184,
+                "status_id":65270938,
+                "pipeline_id":7948234,
+                "request_id": "qweasd"
+            },
+            {
+                "name": "Название сделки",
+                "price": 3422,
+                "_embedded":{
+                    "metadata":{
+                        "category": "forms",
+                        "form_id": 123,
+                        "form_name": "Форма на сайте",
+                        "form_page": "https://example.com",
+                        "form_sent_at": 1608905348,
+                        "ip": "8.8.8.8",
+                        "referer": "https://example.com/form.html"
+                    },
+                    "contacts":[
+                        {
+                            "first_name":"Евгений",
+                            "custom_fields_values":[
                                 {
-                                    "field_code": "PHONE",
-                                    "values": [
+                                    "field_code":"EMAIL",
+                                    "values":[
                                         {
-                                            "value": "+7912321323"
+                                            "enum_code":"WORK",
+                                            "value":"unsorted_example@example.com"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "field_code":"PHONE",
+                                    "values":[
+                                        {
+                                            "enum_code":"WORK",
+                                            "value":"+79129876543"
                                         }
                                     ]
                                 }
                             ]
                         }
-                    ],
-                    "companies": [
-                        {
-                            "name": "ОАО Коспромсервис"
-                        }
                     ]
                 },
-                "metadata": {
-                    "ip": "123.222.2.22",
-                    "form_id": "a1fee7c0fc436088e64ba2e8822ba2b3ewrw",
-                    "form_sent_at": 1590830520,
-                    "form_name": "Форма заявки для полёта в космос",
-                    "form_page": "https://example.com",
-                    "referer": "https://www.google.com/search?&q=elon+musk"
-                }
+                "status_id":65270938,
+                "pipeline_id":7948234,
+                "request_id": "uns_qweasd"
             }
         ]);
         leads.then(() => {
