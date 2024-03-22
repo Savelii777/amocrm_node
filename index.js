@@ -240,7 +240,7 @@ connection.connect((err) => {
 
         leads.then((createdLead) => {
             const dealId = createdLead.id;
-            console.log('Lead created successfully with ID:', dealId);
+            console.log('Lead created successfully with ID:', createdLead);
         }).catch((error) => {
             console.error('Error creating leads:', error);
         });
