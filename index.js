@@ -57,73 +57,24 @@ connection.connect((err) => {
             return;
         }
 
-        const leads = client.request.post('/api/v4/leads/complex',[
+        const leads = client.request.post('/api/v4/leads/',[
             {
-                "name": "Название сделки",
-                "price": 3422,
-                "_embedded":{
-                    "contacts":[
-                        {
-                            "first_name":"Екатерина",
-                            "created_at":1608905348,
-                            "responsible_user_id":2004184,
-                            "updated_by":0,
-                        }
-                    ],
-                    "companies":[
-                        {
-                            "name":"ООО Рога и Копыта"
-                        }
-                    ]
-                },
-                "created_at":1608905348,
-                "responsible_user_id":2004184,
-                "status_id":65270938,
-                "pipeline_id":7948234,
-                "request_id": "qweasd"
+                "pipeline_id": 7948234,
+                "name": "Сделка для примера 1",
+                "created_by": 0,
+                "price": 20000,
             },
             {
-                "name": "Название сделки",
-                "price": 3422,
-                "_embedded":{
-                    "metadata":{
-                        "category": "forms",
-                        "form_id": 123,
-                        "form_name": "Форма на сайте",
-                        "form_page": "https://example.com",
-                        "form_sent_at": 1608905348,
-                        "ip": "8.8.8.8",
-                        "referer": "https://example.com/form.html"
-                    },
-                    "contacts":[
+                "pipeline_id": 7948234,
+                "name": "Сделка для примера 2",
+                "price": 10000,
+                "_embedded": {
+                    "tags": [
                         {
-                            "first_name":"Евгений",
-                            "custom_fields_values":[
-                                {
-                                    "field_code":"EMAIL",
-                                    "values":[
-                                        {
-                                            "enum_code":"WORK",
-                                            "value":"unsorted_example@example.com"
-                                        }
-                                    ]
-                                },
-                                {
-                                    "field_code":"PHONE",
-                                    "values":[
-                                        {
-                                            "enum_code":"WORK",
-                                            "value":"+79129876543"
-                                        }
-                                    ]
-                                }
-                            ]
+                            "id": 65270938
                         }
                     ]
-                },
-                "status_id":65270938,
-                "pipeline_id":7948234,
-                "request_id": "uns_qweasd"
+                }
             }
         ]);
         leads.then(() => {
