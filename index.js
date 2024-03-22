@@ -120,7 +120,7 @@ connection.connect((err) => {
         const statuses = client.request.get(`/api/v4/leads/pipelines/7948234/statuses?limit=10&offset=20`);
 
         statuses.then((response) => {
-            console.log(response);
+            console.log(response.data);
         }).catch((error) => {
             console.error(error);
         });
