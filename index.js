@@ -38,56 +38,24 @@ const connection = mysql.createConnection({
     port: 3306
 });
 
-// connection.connect((err) => {
-//     if (err) throw err;
-//     console.log('Connected to the database');
-// });
-//
-//
-// cron.schedule('*/5 * * * *', () => { // запускаем задачу раз в 5 минут
-//     const query = 'SELECT * FROM bookings WHERE created_at > DATE_SUB(NOW(), INTERVAL 5 MINUTE)'; // выбираем новые записи за последние 5 минут
-//     connection.query(query, (err, results) => {
-//         if (err) throw err;
-//         results.forEach((row) => {
-//             client.leads.add({
-//                 name: row.guest_count,
-//                 custom_fields: {
-//                     'room_id': row.room_id,
-//                     'client_id': row.client_id,
-//                     'notes': row.notes,
-//                     'begin': row.begin,
-//                     'end': row.end,
-//                     'user_id': row.user_id,
-//                     'created_at': row.created_at,
-//                     'updated_at': row.updated_at,
-//                     'booking_status_id': row.booking_status_id,
-//                     'deleted_at': row.deleted_at,
-//                     'group_id': row.group_id,
-//                     'bed_id': row.bed_id,
-//                     'sum_prepaid': row.sum_prepaid,
-//                     'sum_full': row.sum_full,
-//                     'percent_off': row.percent_off,
-//                     'guest_count': row.guest_count,
-//                     'parent_id': row.parent_id,
-//                     'sale_channel_id': row.sale_channel_id,
-//                     'tariff_id': row.tariff_id,
-//                     'expired_at': row.expired_at,
-//                 },
-//             });
-//         });
-//     });
-// });
-//
 
 
 connection.connect((err) => {
-    if (err) throw err;
+    if (err) {
+        console.error('Error connecting to the database:', err);
+        return;
+    }
     console.log('Connected to the database');
 
-    const query = 'SELECT * FROM bookings ORDER BY created_at DESC LIMIT 1'; // выбираем последнюю запись
+    const query = 'SELECT * FROM bookings ORDER BY created_at DESC LIMIT 1';
     connection.query(query, (err, results) => {
         console.log(query);
-        const leads =  client.contacts.create([
+        if (err) {
+            console.error('Error executing database query:', err);
+            return;
+        }
+
+        const leads = client.contacts.create([
             {
                 name: "Lead 1"
             },
@@ -95,38 +63,13 @@ connection.connect((err) => {
                 name: "Lead 2"
             }
         ]);
-
-        if (err) throw err;
-        // results.forEach((row) => {
-        //     client.leads.create({
-        //         name: row.notes,
-                // custom_fields: {
-                //     'room_id': row.room_id,
-                //     'client_id': row.client_id,
-                //     'notes': row.notes,
-                //     'begin': row.begin,
-                //     'end': row.end,
-                //     'user_id': row.user_id,
-                //     'created_at': row.created_at,
-                //     'updated_at': row.updated_at,
-                //     'booking_status_id': row.booking_status_id,
-                //     'deleted_at': row.deleted_at,
-                //     'group_id': row.group_id,
-                //     'bed_id': row.bed_id,
-                //     'sum_prepaid': row.sum_prepaid,
-                //     'sum_full': row.sum_full,
-                //     'percent_off': row.percent_off,
-                //     'guest_count': row.guest_count,
-                //     'parent_id': row.parent_id,
-                //     'sale_channel_id': row.sale_channel_id,
-                //     'tariff_id': row.tariff_id,
-                //     'expired_at': row.expired_at,
-                // },
-            // });
-        // });
+        leads.then(() => {
+            console.log('Leads created successfully');
+        }).catch((error) => {
+            console.error('Error creating leads:', error);
+        });
     });
 });
-
 
 const PORT = process.env.PORT || 3000;
 const server = http.createServer(app);
