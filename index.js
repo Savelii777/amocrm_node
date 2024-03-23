@@ -289,6 +289,10 @@ connection.connect((err) => {
             statuses.then((response) => {
                 console.log(JSON.stringify(response.data.status_id, null, 2)); // Красивый вывод всего объекта с отступами
                 console.log(results[0].booking_status_id)
+                if(results[0].booking_status_id = 1 && bookingStatus.NEW != response.data.status_id)
+                {
+                    console.log('skoaksoka')
+                }
                 // printNestedData(response.data); // Рекурсивный вывод всех вложенных элементов
             }).catch((error) => {
                 console.error(error);
