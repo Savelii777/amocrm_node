@@ -309,8 +309,8 @@ connection.connect((err) => {
                 readIdsFromFile((idTransactionObj) => {
                     Object.entries(idTransactionObj).forEach(([id, transactionId]) => {
                         const statuses = client.request.get(`/api/v4/leads/${transactionId}`);
-                        console.log(statuses)
                         statuses.then((response) => {
+                            console.log(response)
                             const result = results.find((result) => result.id == id);
                             // console.log(response.data.status_id, result.id, id)
                             if (result.booking_status_id == 1 && bookingStatus.NEW != response.data.status_id) {
