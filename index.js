@@ -43,6 +43,7 @@ connection.on('error', (error) => {
     console.error('Error connecting to the database:', error);
 });
 const bookingStatus = {
+    NEW: 65270938,
     CONFIRMED: 65270942,
     CHECKED_IN: 65270946,
     CHECKED_OUT: 65370418,
@@ -281,27 +282,27 @@ connection.connect((err) => {
 
 
 
-        const statuses = client.request.get(`/api/v4/leads/pipelines/7948234/statuses?limit=10&offset=20`);
-
-        statuses.then((response) => {
-            console.log(JSON.stringify(response.data, null, 2)); // Красивый вывод всего объекта с отступами
-            printNestedData(response.data); // Рекурсивный вывод всех вложенных элементов
-        }).catch((error) => {
-            console.error(error);
-        });
-
-        function printNestedData(data) {
-            for (let key in data) {
-                if (data.hasOwnProperty(key)) {
-                    if (typeof data[key] === 'object' && data[key] !== null) {
-                        console.log(`${key}:`);
-                        printNestedData(data[key]); // Рекурсивный вызов для вложенных объектов
-                    } else {
-                        console.log(`${key}: ${data[key]}`);
-                    }
-                }
-            }
-        }
+        // const statuses = client.request.get(`/api/v4/leads/pipelines/7948234/statuses?limit=10&offset=20`);
+        //
+        // statuses.then((response) => {
+        //     console.log(JSON.stringify(response.data, null, 2)); // Красивый вывод всего объекта с отступами
+        //     printNestedData(response.data); // Рекурсивный вывод всех вложенных элементов
+        // }).catch((error) => {
+        //     console.error(error);
+        // });
+        //
+        // function printNestedData(data) {
+        //     for (let key in data) {
+        //         if (data.hasOwnProperty(key)) {
+        //             if (typeof data[key] === 'object' && data[key] !== null) {
+        //                 console.log(`${key}:`);
+        //                 printNestedData(data[key]); // Рекурсивный вызов для вложенных объектов
+        //             } else {
+        //                 console.log(`${key}: ${data[key]}`);
+        //             }
+        //         }
+        //     }
+        // }
 
 
 
@@ -331,7 +332,7 @@ connection.connect((err) => {
 
         statuses.then((response) => {
             console.log(JSON.stringify(response.data.status_id, null, 2)); // Красивый вывод всего объекта с отступами
-            printNestedData(response.data); // Рекурсивный вывод всех вложенных элементов
+            // printNestedData(response.data); // Рекурсивный вывод всех вложенных элементов
         }).catch((error) => {
             console.error(error);
         });
