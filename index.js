@@ -288,6 +288,7 @@ connection.connect((err) => {
                         }
 
                         const idTransactionPairs = data.trim().split('\n\n');
+                        console.log(idTransactionPairs)
                         const idTransactionObj = {};
 
                         idTransactionPairs.forEach((pair) => {
@@ -307,7 +308,6 @@ connection.connect((err) => {
                 }
 
                 readIdsFromFile((idTransactionObj) => {
-                    console.log(idTransactionObj)
                     Object.entries(idTransactionObj).forEach(([id, transactionId]) => {
                         const statuses = client.request.get(`/api/v4/leads/${transactionId}`);
                         statuses.then((response) => {
