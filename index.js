@@ -342,7 +342,7 @@ connection.connect((err) => {
             //         }
             //     }
             // }
-        });
+
             });
         } else {
             console.log('No results found');
