@@ -36,7 +36,8 @@ const connection = mysql.createConnection({
     user: 'admin_d-vlesu',
     password: 'cb37J8tK02',
     database: 'admin_d-vlesu',
-    port: 3306
+    port: 3306,
+    connectTimeout: 1000000000,
 });
 
 connection.on('error', (error) => {
@@ -295,7 +296,6 @@ connection.connect((err) => {
                             const id = match[1];
                             const transactionId = match[2];
                             idTransactionObj[id] = transactionId;
-                            console.log(id, transactionId)
                         }
 
                         callback(idTransactionObj);
