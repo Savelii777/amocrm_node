@@ -307,9 +307,8 @@ connection.connect((err) => {
                 }
 
                 readIdsFromFile((idTransactionObj) => {
+                    console.log(idTransactionObj)
                     Object.entries(idTransactionObj).forEach(([id, transactionId]) => {
-                        console.log(id, transactionId)
-
                         const statuses = client.request.get(`/api/v4/leads/${transactionId}`);
                         statuses.then((response) => {
                             const result = results.find((result) => result.id == id);
