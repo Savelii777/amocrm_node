@@ -37,7 +37,7 @@ const connection = mysql.createConnection({
     password: 'cb37J8tK02',
     database: 'admin_d-vlesu',
     port: 3306,
-    connectTimeout: 1000000000,
+    autoReconnect: true,
 });
 
 connection.on('error', (error) => {
