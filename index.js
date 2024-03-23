@@ -335,6 +335,50 @@ connection.connect((err) => {
                                     });
                                 }
                             }
+                            if (result.booking_status_id == 2 && bookingStatus.CONFIRMED != response.data.status_id) {
+                                if (bookingStatus.NEW == response.data.status_id) {
+                                    const query1 = `UPDATE bookings SET booking_status_id = 1 WHERE client_id = ${id}`;
+                                    connection.query(query1, (err, result) => {
+                                        if (err) {
+                                            console.error('Error executing database query:', err);
+                                            return;
+                                        }
+                                        console.log(`Updated booking_status_id to 1 for client ID: ${id}`);
+                                    });
+                                }
+                                if (bookingStatus.CANCELED == response.data.status_id) {
+                                    const query2 = `UPDATE bookings SET booking_status_id = 3 WHERE client_id = ${id}`;
+                                    connection.query(query2, (err, result) => {
+                                        if (err) {
+                                            console.error('Error executing database query:', err);
+                                            return;
+                                        }
+                                        console.log(`Updated booking_status_id to 3 for client ID: ${id}`);
+                                    });
+                                }
+                            }
+                            if (result.booking_status_id == 3 && bookingStatus.CANCELED != response.data.status_id) {
+                                if (bookingStatus.CONFIRMED == response.data.status_id) {
+                                    const query1 = `UPDATE bookings SET booking_status_id = 1 WHERE client_id = ${id}`;
+                                    connection.query(query1, (err, result) => {
+                                        if (err) {
+                                            console.error('Error executing database query:', err);
+                                            return;
+                                        }
+                                        console.log(`Updated booking_status_id to 1 for client ID: ${id}`);
+                                    });
+                                }
+                                if (bookingStatus.NEW == response.data.status_id) {
+                                    const query2 = `UPDATE bookings SET booking_status_id = 1 WHERE client_id = ${id}`;
+                                    connection.query(query2, (err, result) => {
+                                        if (err) {
+                                            console.error('Error executing database query:', err);
+                                            return;
+                                        }
+                                        console.log(`Updated booking_status_id to 1 for client ID: ${id}`);
+                                    });
+                                }
+                            }
                         }).catch((error) => {
                             console.error(error);
                         });
