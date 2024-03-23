@@ -312,7 +312,7 @@ connection.connect((err) => {
 
                         statuses.then((response) => {
                             const result = results.find((result) => result.id == id);
-                            console.log(response.data.status_id)
+                            console.log(response.data.status_id, result.id, id)
                             if (result.booking_status_id == 1 && bookingStatus.NEW != response.data.status_id) {
                                 if (bookingStatus.CONFIRMED == response.data.status_id) {
                                     const query1 = `UPDATE bookings SET booking_status_id = 2 WHERE client_id = ${id}`;
