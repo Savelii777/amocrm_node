@@ -263,6 +263,49 @@ connection.connect((err) => {
         } else {
             console.log('No results found');
         }
+
+        function readTransactionIdFromFile(callback) {
+            fs.readFile('ids.txt', 'utf8', (err, data) => {
+                if (err) {
+                    console.error('Error reading from file:', err);
+                    return;
+                }
+
+                const transactionIdMatch = data.match(/Transaction ID: (\d+)/);
+                if (transactionIdMatch) {
+                    const transactionId = transactionIdMatch[1];
+                    callback(transactionId);
+                } else {
+                    console.error('Transaction ID not found in file');
+                }
+            });
+        }
+        let getedTransactionId = 0;
+        readTransactionIdFromFile((transactionId) => {
+            getedTransactionId = transactionId;
+            console.log(getedTransactionId)
+            const statuses = client.request.get(`/api/v4/leads/${getedTransactionId}`);
+
+            statuses.then((response) => {
+                console.log(JSON.stringify(response.data.status_id, null, 2)); // Красивый вывод всего объекта с отступами
+                console.log(results[0].status_id)
+                // printNestedData(response.data); // Рекурсивный вывод всех вложенных элементов
+            }).catch((error) => {
+                console.error(error);
+            });
+            function printNestedData(data) {
+                for (let key in data) {
+                    if (data.hasOwnProperty(key)) {
+                        if (typeof data[key] === 'object' && data[key] !== null) {
+                            console.log(`${key}:`);
+                            printNestedData(data[key]); // Рекурсивный вызов для вложенных объектов
+                        } else {
+                            console.log(`${key}: ${data[key]}`);
+                        }
+                    }
+                }
+            }
+        });
     });
     // const query = 'SELECT * FROM bookings ORDER BY created_at DESC LIMIT 1';
     // connection.query(query, (err, results) => {
@@ -308,48 +351,7 @@ connection.connect((err) => {
 
 
     // });
-    function readTransactionIdFromFile(callback) {
-        fs.readFile('ids.txt', 'utf8', (err, data) => {
-            if (err) {
-                console.error('Error reading from file:', err);
-                return;
-            }
 
-            const transactionIdMatch = data.match(/Transaction ID: (\d+)/);
-            if (transactionIdMatch) {
-                const transactionId = transactionIdMatch[1];
-                callback(transactionId);
-            } else {
-                console.error('Transaction ID not found in file');
-            }
-        });
-    }
-    let getedTransactionId = 0;
-    readTransactionIdFromFile((transactionId) => {
-        getedTransactionId = transactionId;
-        console.log(getedTransactionId)
-        const statuses = client.request.get(`/api/v4/leads/${getedTransactionId}`);
-
-        statuses.then((response) => {
-            console.log(JSON.stringify(response.data.status_id, null, 2)); // Красивый вывод всего объекта с отступами
-            console.log(results[0].status_id)
-            // printNestedData(response.data); // Рекурсивный вывод всех вложенных элементов
-        }).catch((error) => {
-            console.error(error);
-        });
-        function printNestedData(data) {
-            for (let key in data) {
-                if (data.hasOwnProperty(key)) {
-                    if (typeof data[key] === 'object' && data[key] !== null) {
-                        console.log(`${key}:`);
-                        printNestedData(data[key]); // Рекурсивный вызов для вложенных объектов
-                    } else {
-                        console.log(`${key}: ${data[key]}`);
-                    }
-                }
-            }
-        }
-    });
 
 });
 
