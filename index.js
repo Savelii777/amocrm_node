@@ -289,9 +289,16 @@ connection.connect((err) => {
             statuses.then((response) => {
                 console.log(JSON.stringify(response.data.status_id, null, 2)); // Красивый вывод всего объекта с отступами
                 console.log(results[0].booking_status_id)
-                if(results[0].booking_status_id = 1 && bookingStatus.NEW != response.data.status_id)
-                {
-                    console.log('skoaksoka')
+                const query1 = 'UPDATE bookings SET booking_status_id = 2 WHERE id = 993';
+                if (results[0].booking_status_id == 1 && bookingStatus.NEW != response.data.status_id) {
+                    connection.query(query1, [2, results[0].id], (err, result) => {
+                        if (err) {
+                            console.error('Error executing database query:', err);
+                            return;
+                        }
+
+                        console.log(`Updated booking_status_id to 2 for booking ID: ${results[0].id}`);
+                    });
                 }
                 // printNestedData(response.data); // Рекурсивный вывод всех вложенных элементов
             }).catch((error) => {
