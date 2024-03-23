@@ -288,7 +288,7 @@ connection.connect((err) => {
 
             statuses.then((response) => {
                 console.log(JSON.stringify(response.data.status_id, null, 2)); // Красивый вывод всего объекта с отступами
-                console.log(results[0].status_id)
+                console.log(results[0])
                 // printNestedData(response.data); // Рекурсивный вывод всех вложенных элементов
             }).catch((error) => {
                 console.error(error);
