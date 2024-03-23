@@ -295,6 +295,7 @@ connection.connect((err) => {
                             const id = match[1];
                             const transactionId = match[2];
                             idTransactionObj[id] = transactionId;
+                            console.log(id, transactionId)
                         }
 
                         callback(idTransactionObj);
@@ -303,7 +304,6 @@ connection.connect((err) => {
 
 
                 readIdsFromFile((idTransactionObj) => {
-                    console.log(idTransactionObj)
                     Object.entries(idTransactionObj).forEach(([id, transactionId]) => {
                         const statuses = client.request.get(`/api/v4/leads/${transactionId}`);
                         statuses.then((response) => {
