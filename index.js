@@ -281,6 +281,12 @@ connection.connect((err) => {
                             return;
                         }
 
+                        if (data === '') {
+                            console.log('File is empty');
+                            callback({});
+                            return;
+                        }
+
                         const idTransactionPairs = data.trim().split('\n\n');
                         const idTransactionObj = {};
 
@@ -330,7 +336,8 @@ connection.connect((err) => {
                     });
                 });
 
-            // function printNestedData(data) {
+
+                // function printNestedData(data) {
             //     for (let key in data) {
             //         if (data.hasOwnProperty(key)) {
             //             if (typeof data[key] === 'object' && data[key] !== null) {
