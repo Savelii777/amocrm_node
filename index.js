@@ -292,9 +292,14 @@ connection.connect((err) => {
 
                         idTransactionPairs.forEach((pair) => {
                             const lines = pair.split('\n');
-                            const id = lines.find((line) => line.startsWith('ID: ')).split(': ')[1];
-                            const transactionId = lines.find((line) => line.startsWith('Transaction ID: ')).split(': ')[1];
-                            idTransactionObj[id] = transactionId;
+                            const idLine = lines.find((line) => line.startsWith('ID: '));
+                            const transactionIdLine = lines.find((line) => line.startsWith('Transaction ID: '));
+
+                            if (idLine && transactionIdLine) {
+                                const id = idLine.split(': ')[1];
+                                const transactionId = transactionIdLine.split(': ')[1];
+                                idTransactionObj[id] = transactionId;
+                            }
                         });
 
                         callback(idTransactionObj);
