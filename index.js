@@ -31,17 +31,19 @@ const client = new Client({
 
 client.token.setValue(token);
 
-const connection = mysql.createConnection({
+const pool = mysql.createPool({
     host: 'localhost',
     user: 'admin_d-vlesu',
     password: 'cb37J8tK02',
     database: 'admin_d-vlesu',
     port: 3306,
+    connectionLimit: 10, // Установить максимальное количество соединений в пуле
 });
 
-connection.on('error', (error) => {
-    console.error('Error connecting to the database:', error);
+pool.on('error', (error) => {
+    console.error('Ошибка подключения к базе данных:', error);
 });
+
 const bookingStatus = {
     NEW: 65270938,
     CONFIRMED: 65270942,
@@ -50,360 +52,345 @@ const bookingStatus = {
     CANCELED: 65370422
 };
 
-function handleDisconnect() {
+// Получение соединения из пула
+pool.getConnection((err, connection) => {
+    if (err) {
+        console.error('Ошибка подключения к базе данных:', err);
+        return;
+    }
+    console.log('Подключено к базе данных');
+    // const query = 'SELECT bookings.*, clients.* FROM bookings INNER JOIN clients ON bookings.client_id = clients.id ORDER BY bookings.created_at DESC LIMIT 1';
+    const query = 'SELECT bookings.*, clients.* FROM bookings INNER JOIN clients ON bookings.client_id = clients.id ORDER BY bookings.created_at DESC LIMIT 5';
+    connection.query(query, (err, results) => {
+        console.log(query);
 
-    connection.connect((err) => {
+        function writeIdsToFile(id, transactionId) {
+            const data = `ID: ${id}\nTransaction ID: ${transactionId}\n`;
+
+            fs.appendFile('ids.txt', data, (err) => {
+                if (err) {
+                    console.error('Error writing to file:', err);
+                    return;
+                }
+                console.log('IDs successfully written to file');
+            });
+        }
+        function formatDate(date) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            const hours = String(date.getHours()).padStart(2, '0');
+            const minutes = String(date.getMinutes()).padStart(2, '0');
+            const seconds = String(date.getSeconds()).padStart(2, '0');
+            const timezoneOffset = String(date.getTimezoneOffset() / -60).padStart(2, '0');
+
+            return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}+${timezoneOffset}:00`;
+        }
+        //-------------------------------------------------------------------------
+
+        if (results.length > 0) {
+            results.forEach((result) => {
+        const today = result.begin;
+        const tomorrow = result.end;
+
+        const formattedToday = formatDate(today);
+        const formattedTomorrow = formatDate(tomorrow);
+
+        const guestCount = parseInt(result.guest_count, 10);
+        // const leads = client.request.post('/api/v4/leads/complex', [
+        //     {
+        //         "name": result.id + "",
+        //     "price": result.sum_full,
+        //         "custom_fields_values": [
+        //             {
+        //                 "field_id": 1527477,
+        //                 "field_name": "Начало",
+        //                 "field_code": null,
+        //                 "field_type": "date",
+        //                 "values": [
+        //                     {
+        //                         "value": formattedToday
+        //                     }
+        //                 ]
+        //             },
+        //             {
+        //                 "field_id": 1527479,
+        //                 "field_name": "Конец",
+        //                 "field_code": null,
+        //                 "field_type": "date",
+        //                 "values": [
+        //                     {
+        //                         "value": formattedTomorrow
+        //                     }
+        //                 ]
+        //             },
+        //             {
+        //                 "field_id": 1527481,
+        //                 "field_name": "Комментарий",
+        //                 "field_code": null,
+        //                 "field_type": "text",
+        //                 "values": [
+        //                     {
+        //                         "value": result.notes + ""
+        //                     }
+        //                 ]
+        //             },
+        //             {
+        //                 "field_id": 1527483,
+        //                 "field_name": "Предоплата",
+        //                 "field_code": null,
+        //                 "field_type": "numeric",
+        //                 "values": [
+        //                     {
+        //                         "value": result.sum_prepaid
+        //                     }
+        //                 ]
+        //             },
+        //             {
+        //                 "field_id": 1527491,
+        //                 "field_name": "Скидка",
+        //                 "field_code": null,
+        //                 "field_type": "numeric",
+        //                 "values": [
+        //                     {
+        //                         "value": result.percent_off
+        //                     }
+        //                 ]
+        //             },
+        //             {
+        //                 "field_id": 1527493,
+        //                 "field_name": "Количество гостей",
+        //                 "field_code": null,
+        //                 "field_type": "numeric",
+        //                 "values": [
+        //                     {
+        //                         "value": guestCount
+        //                     }
+        //                 ]
+        //             },
+        //             {
+        //                 "field_id": 1527495,
+        //                 "field_name": "Имя",
+        //                 "field_code": null,
+        //                 "field_type": "text",
+        //                 "values": [
+        //                     {
+        //                         "value": result.name + ""
+        //                     }
+        //                 ]
+        //             },
+        //             {
+        //                 "field_id": 1527497,
+        //                 "field_name": "Телефон",
+        //                 "field_code": null,
+        //                 "field_type": "text",
+        //                 "values": [
+        //                     {
+        //                         "value": result.phone + ""
+        //                     }
+        //                 ]
+        //             },
+        //             {
+        //                 "field_id": 1527499,
+        //                 "field_name": "Почта",
+        //                 "field_code": null,
+        //                 "field_type": "text",
+        //                 "values": [
+        //                     {
+        //                         "value": result.email + ""
+        //                     }
+        //                 ]
+        //             },
+        //             {
+        //                 "field_id": 1527501,
+        //                 "field_name": "ВК",
+        //                 "field_code": null,
+        //                 "field_type": "text",
+        //                 "values": [
+        //                     {
+        //                         "value": result.vk + ""
+        //                     }
+        //                 ]
+        //             },
+        //             {
+        //                 "field_id": 1527503,
+        //                 "field_name": "Инстаграм",
+        //                 "field_code": null,
+        //                 "field_type": "text",
+        //                 "values": [
+        //                     {
+        //                         "value": result.instagram + ""
+        //                     }
+        //                 ]
+        //             },
+        //             {
+        //                 "field_id": 1527505,
+        //                 "field_name": "Телеграм",
+        //                 "field_code": null,
+        //                 "field_type": "text",
+        //                 "values": [
+        //                     {
+        //                         "value": result.telegram + ""
+        //                     }
+        //                 ]
+        //             },
+        //             {
+        //                 "field_id": 1527507,
+        //                 "field_name": "Ватсап",
+        //                 "field_code": null,
+        //                 "field_type": "text",
+        //                 "values": [
+        //                     {
+        //                         "value": result.whatsapp + ""
+        //                     }
+        //                 ]
+        //             }
+        //         ],
+        //         "score": null,
+        //         "account_id": 31623822,
+        //         "created_at":1608905348,
+        //         "status_id":65270938,
+        //         "pipeline_id":7948234,
+        //     },
+        // ]);
+        //
+        // leads.then((createdLead) => {
+        //     console.log('Lead created successfully with ID:', createdLead.data[0].id);
+        //     writeIdsToFile(result.id, createdLead.data[0].id);
+        // }).catch((error) => {
+        //     console.error('Error creating leads:', error);
+        // });
+
+
+        //-------------------------------------------------------------------------
+
+
+
         if (err) {
-            console.error('Error connecting to the database:', err);
+            console.error('Error executing database query1:', err);
             return;
         }
-        console.log('Connected to the database');
-        // const query = 'SELECT bookings.*, clients.* FROM bookings INNER JOIN clients ON bookings.client_id = clients.id ORDER BY bookings.created_at DESC LIMIT 1';
-        const query = 'SELECT bookings.*, clients.* FROM bookings INNER JOIN clients ON bookings.client_id = clients.id ORDER BY bookings.created_at DESC LIMIT 5';
-        connection.query(query, (err, results) => {
-            console.log(query);
 
-            function writeIdsToFile(id, transactionId) {
-                const data = `ID: ${id}\nTransaction ID: ${transactionId}\n`;
+        if (results.length > 0) {
 
-                fs.appendFile('ids.txt', data, (err) => {
-                    if (err) {
-                        console.error('Error writing to file:', err);
-                        return;
-                    }
-                    console.log('IDs successfully written to file');
-                });
-            }
+        } else {
+            console.log('No results found');
+        }
 
-            function formatDate(date) {
-                const year = date.getFullYear();
-                const month = String(date.getMonth() + 1).padStart(2, '0');
-                const day = String(date.getDate()).padStart(2, '0');
-                const hours = String(date.getHours()).padStart(2, '0');
-                const minutes = String(date.getMinutes()).padStart(2, '0');
-                const seconds = String(date.getSeconds()).padStart(2, '0');
-                const timezoneOffset = String(date.getTimezoneOffset() / -60).padStart(2, '0');
+                function readIdsFromFile(callback) {
+                    fs.readFile('ids.txt', 'utf8', (err, data) => {
+                        if (err) {
+                            console.error('Error reading from file:', err);
+                            return;
+                        }
 
-                return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}+${timezoneOffset}:00`;
-            }
+                        if (data === '') {
+                            console.log('File is empty');
+                            callback({});
+                            return;
+                        }
 
-            //-------------------------------------------------------------------------
+                        const idTransactionObj = {};
+                        const regex = /ID:\s*(\d+)\s*Transaction ID:\s*(\d+)/g;
+                        let match;
 
-            if (results.length > 0) {
-                results.forEach((result) => {
-                    const today = result.begin;
-                    const tomorrow = result.end;
+                        while ((match = regex.exec(data)) !== null) {
+                            const id = match[1];
+                            const transactionId = match[2];
+                            idTransactionObj[id] = transactionId;
+                        }
 
-                    const formattedToday = formatDate(today);
-                    const formattedTomorrow = formatDate(tomorrow);
-
-                    const guestCount = parseInt(result.guest_count, 10);
-                    // const leads = client.request.post('/api/v4/leads/complex', [
-                    //     {
-                    //         "name": result.id + "",
-                    //     "price": result.sum_full,
-                    //         "custom_fields_values": [
-                    //             {
-                    //                 "field_id": 1527477,
-                    //                 "field_name": "Начало",
-                    //                 "field_code": null,
-                    //                 "field_type": "date",
-                    //                 "values": [
-                    //                     {
-                    //                         "value": formattedToday
-                    //                     }
-                    //                 ]
-                    //             },
-                    //             {
-                    //                 "field_id": 1527479,
-                    //                 "field_name": "Конец",
-                    //                 "field_code": null,
-                    //                 "field_type": "date",
-                    //                 "values": [
-                    //                     {
-                    //                         "value": formattedTomorrow
-                    //                     }
-                    //                 ]
-                    //             },
-                    //             {
-                    //                 "field_id": 1527481,
-                    //                 "field_name": "Комментарий",
-                    //                 "field_code": null,
-                    //                 "field_type": "text",
-                    //                 "values": [
-                    //                     {
-                    //                         "value": result.notes + ""
-                    //                     }
-                    //                 ]
-                    //             },
-                    //             {
-                    //                 "field_id": 1527483,
-                    //                 "field_name": "Предоплата",
-                    //                 "field_code": null,
-                    //                 "field_type": "numeric",
-                    //                 "values": [
-                    //                     {
-                    //                         "value": result.sum_prepaid
-                    //                     }
-                    //                 ]
-                    //             },
-                    //             {
-                    //                 "field_id": 1527491,
-                    //                 "field_name": "Скидка",
-                    //                 "field_code": null,
-                    //                 "field_type": "numeric",
-                    //                 "values": [
-                    //                     {
-                    //                         "value": result.percent_off
-                    //                     }
-                    //                 ]
-                    //             },
-                    //             {
-                    //                 "field_id": 1527493,
-                    //                 "field_name": "Количество гостей",
-                    //                 "field_code": null,
-                    //                 "field_type": "numeric",
-                    //                 "values": [
-                    //                     {
-                    //                         "value": guestCount
-                    //                     }
-                    //                 ]
-                    //             },
-                    //             {
-                    //                 "field_id": 1527495,
-                    //                 "field_name": "Имя",
-                    //                 "field_code": null,
-                    //                 "field_type": "text",
-                    //                 "values": [
-                    //                     {
-                    //                         "value": result.name + ""
-                    //                     }
-                    //                 ]
-                    //             },
-                    //             {
-                    //                 "field_id": 1527497,
-                    //                 "field_name": "Телефон",
-                    //                 "field_code": null,
-                    //                 "field_type": "text",
-                    //                 "values": [
-                    //                     {
-                    //                         "value": result.phone + ""
-                    //                     }
-                    //                 ]
-                    //             },
-                    //             {
-                    //                 "field_id": 1527499,
-                    //                 "field_name": "Почта",
-                    //                 "field_code": null,
-                    //                 "field_type": "text",
-                    //                 "values": [
-                    //                     {
-                    //                         "value": result.email + ""
-                    //                     }
-                    //                 ]
-                    //             },
-                    //             {
-                    //                 "field_id": 1527501,
-                    //                 "field_name": "ВК",
-                    //                 "field_code": null,
-                    //                 "field_type": "text",
-                    //                 "values": [
-                    //                     {
-                    //                         "value": result.vk + ""
-                    //                     }
-                    //                 ]
-                    //             },
-                    //             {
-                    //                 "field_id": 1527503,
-                    //                 "field_name": "Инстаграм",
-                    //                 "field_code": null,
-                    //                 "field_type": "text",
-                    //                 "values": [
-                    //                     {
-                    //                         "value": result.instagram + ""
-                    //                     }
-                    //                 ]
-                    //             },
-                    //             {
-                    //                 "field_id": 1527505,
-                    //                 "field_name": "Телеграм",
-                    //                 "field_code": null,
-                    //                 "field_type": "text",
-                    //                 "values": [
-                    //                     {
-                    //                         "value": result.telegram + ""
-                    //                     }
-                    //                 ]
-                    //             },
-                    //             {
-                    //                 "field_id": 1527507,
-                    //                 "field_name": "Ватсап",
-                    //                 "field_code": null,
-                    //                 "field_type": "text",
-                    //                 "values": [
-                    //                     {
-                    //                         "value": result.whatsapp + ""
-                    //                     }
-                    //                 ]
-                    //             }
-                    //         ],
-                    //         "score": null,
-                    //         "account_id": 31623822,
-                    //         "created_at":1608905348,
-                    //         "status_id":65270938,
-                    //         "pipeline_id":7948234,
-                    //     },
-                    // ]);
-                    //
-                    // leads.then((createdLead) => {
-                    //     console.log('Lead created successfully with ID:', createdLead.data[0].id);
-                    //     writeIdsToFile(result.id, createdLead.data[0].id);
-                    // }).catch((error) => {
-                    //     console.error('Error creating leads:', error);
-                    // });
+                        callback(idTransactionObj);
+                    });
+                }
 
 
-                    //-------------------------------------------------------------------------
-
-
-                    if (err) {
-                        console.error('Error executing database query1:', err);
-                        return;
-                    }
-
-                    if (results.length > 0) {
-
-                    } else {
-                        console.log('No results found');
-                    }
-
-                    function readIdsFromFile(callback) {
-                        fs.readFile('ids.txt', 'utf8', (err, data) => {
-                            if (err) {
-                                console.error('Error reading from file:', err);
-                                return;
-                            }
-
-                            if (data === '') {
-                                console.log('File is empty');
-                                callback({});
-                                return;
-                            }
-
-                            const idTransactionObj = {};
-                            const regex = /ID:\s*(\d+)\s*Transaction ID:\s*(\d+)/g;
-                            let match;
-
-                            while ((match = regex.exec(data)) !== null) {
-                                const id = match[1];
-                                const transactionId = match[2];
-                                idTransactionObj[id] = transactionId;
-                            }
-
-                            callback(idTransactionObj);
-                        });
-                    }
-
-
-                    readIdsFromFile((idTransactionObj) => {
-                        Object.entries(idTransactionObj).forEach(([id, transactionId]) => {
-                            const statuses = client.request.get(`/api/v4/leads/${transactionId}`);
-                            statuses.then((response) => {
-                                const result = results.find((result) => result.id == id);
-                                // console.log(response.data.status_id, result.id, id)
-                                if (result.booking_status_id == 1 && bookingStatus.NEW != response.data.status_id) {
-                                    if (bookingStatus.CONFIRMED == response.data.status_id) {
-                                        const query1 = `UPDATE bookings SET booking_status_id = 2 WHERE client_id = ${id}`;
-                                        connection.query(query1, (err, result) => {
-                                            if (err) {
-                                                console.error('Error executing database query:', err);
-                                                return;
-                                            }
-                                            console.log(`Updated booking_status_id to 2 for client ID: ${id}`);
-                                        });
-                                    }
-                                    if (bookingStatus.CANCELED == response.data.status_id) {
-                                        const query2 = `UPDATE bookings SET booking_status_id = 3 WHERE client_id = ${id}`;
-                                        connection.query(query2, (err, result) => {
-                                            if (err) {
-                                                console.error('Error executing database query:', err);
-                                                return;
-                                            }
-                                            console.log(`Updated booking_status_id to 3 for client ID: ${id}`);
-                                        });
-                                    }
+                readIdsFromFile((idTransactionObj) => {
+                    Object.entries(idTransactionObj).forEach(([id, transactionId]) => {
+                        const statuses = client.request.get(`/api/v4/leads/${transactionId}`);
+                        statuses.then((response) => {
+                            const result = results.find((result) => result.id == id);
+                            // console.log(response.data.status_id, result.id, id)
+                            if (result.booking_status_id == 1 && bookingStatus.NEW != response.data.status_id) {
+                                if (bookingStatus.CONFIRMED == response.data.status_id) {
+                                    const query1 = `UPDATE bookings SET booking_status_id = 2 WHERE client_id = ${id}`;
+                                    connection.query(query1, (err, result) => {
+                                        if (err) {
+                                            console.error('Error executing database query:', err);
+                                            return;
+                                        }
+                                        console.log(`Updated booking_status_id to 2 for client ID: ${id}`);
+                                    });
                                 }
-                                if (result.booking_status_id == 2 && bookingStatus.CONFIRMED != response.data.status_id) {
-                                    if (bookingStatus.NEW == response.data.status_id) {
-                                        const query1 = `UPDATE bookings SET booking_status_id = 1 WHERE client_id = ${id}`;
-                                        connection.query(query1, (err, result) => {
-                                            if (err) {
-                                                console.error('Error executing database query:', err);
-                                                return;
-                                            }
-                                            console.log(`Updated booking_status_id to 1 for client ID: ${id}`);
-                                        });
-                                    }
-                                    if (bookingStatus.CANCELED == response.data.status_id) {
-                                        const query2 = `UPDATE bookings SET booking_status_id = 3 WHERE client_id = ${id}`;
-                                        connection.query(query2, (err, result) => {
-                                            if (err) {
-                                                console.error('Error executing database query:', err);
-                                                return;
-                                            }
-                                            console.log(`Updated booking_status_id to 3 for client ID: ${id}`);
-                                        });
-                                    }
+                                if (bookingStatus.CANCELED == response.data.status_id) {
+                                    const query2 = `UPDATE bookings SET booking_status_id = 3 WHERE client_id = ${id}`;
+                                    connection.query(query2, (err, result) => {
+                                        if (err) {
+                                            console.error('Error executing database query:', err);
+                                            return;
+                                        }
+                                        console.log(`Updated booking_status_id to 3 for client ID: ${id}`);
+                                    });
                                 }
-                                if (result.booking_status_id == 3 && bookingStatus.CANCELED != response.data.status_id) {
-                                    if (bookingStatus.CONFIRMED == response.data.status_id) {
-                                        const query1 = `UPDATE bookings SET booking_status_id = 1 WHERE client_id = ${id}`;
-                                        connection.query(query1, (err, result) => {
-                                            if (err) {
-                                                console.error('Error executing database query:', err);
-                                                return;
-                                            }
-                                            console.log(`Updated booking_status_id to 1 for client ID: ${id}`);
-                                        });
-                                    }
-                                    if (bookingStatus.NEW == response.data.status_id) {
-                                        const query2 = `UPDATE bookings SET booking_status_id = 1 WHERE client_id = ${id}`;
-                                        connection.query(query2, (err, result) => {
-                                            if (err) {
-                                                console.error('Error executing database query:', err);
-                                                return;
-                                            }
-                                            console.log(`Updated booking_status_id to 1 for client ID: ${id}`);
-                                        });
-                                    }
+                            }
+                            if (result.booking_status_id == 2 && bookingStatus.CONFIRMED != response.data.status_id) {
+                                if (bookingStatus.NEW == response.data.status_id) {
+                                    const query1 = `UPDATE bookings SET booking_status_id = 1 WHERE client_id = ${id}`;
+                                    connection.query(query1, (err, result) => {
+                                        if (err) {
+                                            console.error('Error executing database query:', err);
+                                            return;
+                                        }
+                                        console.log(`Updated booking_status_id to 1 for client ID: ${id}`);
+                                    });
                                 }
-                            }).catch((error) => {
-                                console.error(error);
-                            });
+                                if (bookingStatus.CANCELED == response.data.status_id) {
+                                    const query2 = `UPDATE bookings SET booking_status_id = 3 WHERE client_id = ${id}`;
+                                    connection.query(query2, (err, result) => {
+                                        if (err) {
+                                            console.error('Error executing database query:', err);
+                                            return;
+                                        }
+                                        console.log(`Updated booking_status_id to 3 for client ID: ${id}`);
+                                    });
+                                }
+                            }
+                            if (result.booking_status_id == 3 && bookingStatus.CANCELED != response.data.status_id) {
+                                if (bookingStatus.CONFIRMED == response.data.status_id) {
+                                    const query1 = `UPDATE bookings SET booking_status_id = 1 WHERE client_id = ${id}`;
+                                    connection.query(query1, (err, result) => {
+                                        if (err) {
+                                            console.error('Error executing database query:', err);
+                                            return;
+                                        }
+                                        console.log(`Updated booking_status_id to 1 for client ID: ${id}`);
+                                    });
+                                }
+                                if (bookingStatus.NEW == response.data.status_id) {
+                                    const query2 = `UPDATE bookings SET booking_status_id = 1 WHERE client_id = ${id}`;
+                                    connection.query(query2, (err, result) => {
+                                        if (err) {
+                                            console.error('Error executing database query:', err);
+                                            return;
+                                        }
+                                        console.log(`Updated booking_status_id to 1 for client ID: ${id}`);
+                                    });
+                                }
+                            }
+                        }).catch((error) => {
+                            console.error(error);
                         });
                     });
-
-
                 });
-            } else {
-                console.log('No results found');
-            }
-        });
-        if(err) {
-            console.log('error when connecting to db:', err);
-            setTimeout(handleDisconnect, 2000);
-        }
-    });
-    connection.on('error', function(err) {
-        console.log('db error', err);
-        if(err.code === 'PROTOCOL_CONNECTION_LOST') {
-            handleDisconnect();
+
+
+            });
         } else {
-            throw err;
+            console.log('No results found');
         }
     });
-}
-handleDisconnect();
+    connection.release();
+});
 
 const PORT = process.env.PORT || 3000;
 const server = http.createServer(app);
