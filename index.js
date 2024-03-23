@@ -307,12 +307,12 @@ connection.connect((err) => {
                 }
 
                 readIdsFromFile((idTransactionObj) => {
-                    console.log('kdkdkd')
                     Object.entries(idTransactionObj).forEach(([id, transactionId]) => {
                         const statuses = client.request.get(`/api/v4/leads/${transactionId}`);
 
                         statuses.then((response) => {
                             const result = results.find((result) => result.id == id);
+                            console.log(response.data.status_id)
                             if (result.booking_status_id == 1 && bookingStatus.NEW != response.data.status_id) {
                                 if (bookingStatus.CONFIRMED == response.data.status_id) {
                                     const query1 = `UPDATE bookings SET booking_status_id = 2 WHERE client_id = ${id}`;
