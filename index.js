@@ -290,16 +290,29 @@ connection.connect((err) => {
                 console.log(JSON.stringify(response.data.status_id, null, 2)); // Красивый вывод всего объекта с отступам
                 console.log(results[0].booking_status_id)
                 const query1 = 'UPDATE bookings SET booking_status_id = 3 WHERE client_id = 993';
+                const query2 = 'SELECT * FROM bookings WHERE client_id = 993';
+
                 if (results[0].booking_status_id == 1 && bookingStatus.NEW != response.data.status_id) {
-                    connection.query(query1, [2, results[0].id], (err, result) => {
+                    connection.query(query1, (err, result) => {
                         if (err) {
                             console.error('Error executing database query:', err);
                             return;
                         }
 
-                        console.log(`Updated booking_status_id to 2 for booking ID: ${results[0].id}`);
+                        console.log(`Updated booking_status_id to 3 for client ID: 993`);
+
+                        // Выполняем новый запрос SELECT для получения обновленной записи
+                        connection.query(query2, (err, updatedResults) => {
+                            if (err) {
+                                console.error('Error executing database query:', err);
+                                return;
+                            }
+
+                            console.log('Updated booking:', updatedResults[0]);
+                        });
                     });
                 }
+
                 // printNestedData(response.data); // Рекурсивный вывод всех вложенных элементов
             }).catch((error) => {
                 console.error(error);
