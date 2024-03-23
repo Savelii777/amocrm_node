@@ -288,7 +288,6 @@ connection.connect((err) => {
                         }
 
                         const idTransactionPairs = data.trim().split('\n\n');
-                        console.log(idTransactionPairs)
                         const idTransactionObj = {};
 
                         idTransactionPairs.forEach((pair) => {
@@ -299,6 +298,7 @@ connection.connect((err) => {
                             if (idLine && transactionIdLine) {
                                 const id = idLine.split(': ')[1];
                                 const transactionId = transactionIdLine.split(': ')[1];
+                                console.log(id, transactionId)
                                 idTransactionObj[id] = transactionId;
                             }
                         });
