@@ -295,40 +295,40 @@ connection.connect((err) => {
                     });
                 }
 
-                readIdsFromFile((idTransactionObj) => {
-                    Object.entries(idTransactionObj).forEach(([id, transactionId]) => {
-                        const statuses = client.request.get(`/api/v4/leads/${transactionId}`);
-
-                        statuses.then((response) => {
-                            const result = results.find((result) => result.id == id);
-
-                            if (result.booking_status_id == 1 && bookingStatus.NEW != response.data.status_id) {
-                                if (bookingStatus.CONFIRMED == response.data.status_id) {
-                                    const query1 = `UPDATE bookings SET booking_status_id = 2 WHERE client_id = ${id}`;
-                                    connection.query(query1, (err, result) => {
-                                        if (err) {
-                                            console.error('Error executing database query:', err);
-                                            return;
-                                        }
-                                        console.log(`Updated booking_status_id to 2 for client ID: ${id}`);
-                                    });
-                                }
-                                if (bookingStatus.CANCELED == response.data.status_id) {
-                                    const query2 = `UPDATE bookings SET booking_status_id = 3 WHERE client_id = ${id}`;
-                                    connection.query(query2, (err, result) => {
-                                        if (err) {
-                                            console.error('Error executing database query:', err);
-                                            return;
-                                        }
-                                        console.log(`Updated booking_status_id to 3 for client ID: ${id}`);
-                                    });
-                                }
-                            }
-                        }).catch((error) => {
-                            console.error(error);
-                        });
-                    });
-                });
+                // readIdsFromFile((idTransactionObj) => {
+                //     Object.entries(idTransactionObj).forEach(([id, transactionId]) => {
+                //         const statuses = client.request.get(`/api/v4/leads/${transactionId}`);
+                //
+                //         statuses.then((response) => {
+                //             const result = results.find((result) => result.id == id);
+                //
+                //             if (result.booking_status_id == 1 && bookingStatus.NEW != response.data.status_id) {
+                //                 if (bookingStatus.CONFIRMED == response.data.status_id) {
+                //                     const query1 = `UPDATE bookings SET booking_status_id = 2 WHERE client_id = ${id}`;
+                //                     connection.query(query1, (err, result) => {
+                //                         if (err) {
+                //                             console.error('Error executing database query:', err);
+                //                             return;
+                //                         }
+                //                         console.log(`Updated booking_status_id to 2 for client ID: ${id}`);
+                //                     });
+                //                 }
+                //                 if (bookingStatus.CANCELED == response.data.status_id) {
+                //                     const query2 = `UPDATE bookings SET booking_status_id = 3 WHERE client_id = ${id}`;
+                //                     connection.query(query2, (err, result) => {
+                //                         if (err) {
+                //                             console.error('Error executing database query:', err);
+                //                             return;
+                //                         }
+                //                         console.log(`Updated booking_status_id to 3 for client ID: ${id}`);
+                //                     });
+                //                 }
+                //             }
+                //         }).catch((error) => {
+                //             console.error(error);
+                //         });
+                //     });
+                // });
 
             // function printNestedData(data) {
             //     for (let key in data) {
