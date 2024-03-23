@@ -287,27 +287,23 @@ connection.connect((err) => {
                             return;
                         }
 
-                        const idTransactionPairs = data.trim().split('\n\n');
                         const idTransactionObj = {};
+                        const regex = /ID:\s*(\d+)\s*Transaction ID:\s*(\d+)/g;
+                        let match;
 
-                        idTransactionPairs.forEach((pair) => {
-                            const lines = pair.split('\n');
-                            const idLine = lines.find((line) => line.startsWith('ID: '));
-                            const transactionIdLine = lines.find((line) => line.startsWith('Transaction ID: '));
-
-                            if (idLine && transactionIdLine) {
-                                const id = idLine.split(': ')[1];
-                                const transactionId = transactionIdLine.split(': ')[1];
-                                console.log(id, transactionId)
-                                idTransactionObj[id] = transactionId;
-                            }
-                        });
+                        while ((match = regex.exec(data)) !== null) {
+                            const id = match[1];
+                            const transactionId = match[2];
+                            idTransactionObj[id] = transactionId;
+                        }
 
                         callback(idTransactionObj);
                     });
                 }
 
+
                 readIdsFromFile((idTransactionObj) => {
+                    console.log(idTransactionObj)
                     Object.entries(idTransactionObj).forEach(([id, transactionId]) => {
                         const statuses = client.request.get(`/api/v4/leads/${transactionId}`);
                         statuses.then((response) => {
