@@ -89,19 +89,31 @@ pool.getConnection((err, connection) => {
                     console.log('IDs successfully written to file');
                 });
             };
-            function readContactIdsFromFile(callback) {
-                fs.readFile('ids.txt', 'utf8', (err, data) => {
+
+            function readContactsIdsFromFile(callback) {
+                fs.readFile('contacts_ids.txt', 'utf8', (err, data) => {
                     if (err) {
-                        console.error('Error reading file:', err);
-                        return callback(err);
+                        console.error('Error reading from file:', err);
+                        return;
                     }
 
-                    const ids = data.split('\n').filter(Boolean).map(line => {
-                        const [id, contactId] = line.match(/[^\n]+/g);
-                        return { id, contactId };
-                    });
+                    if (data === '') {
+                        console.log('File is empty');
+                        callback({});
+                        return;
+                    }
 
-                    callback(null, ids);
+                    const idContactsObj = {};
+                    const regex = /ID:\s*(\d+)\s*Contract ID:\s*(\d+)/g;
+                    let match;
+
+                    while ((match = regex.exec(data)) !== null) {
+                        const id = match[1];
+                        const contractId = match[2];
+                        idContactsObj[id] = contractId;
+                    }
+
+                    callback(idContactsObj);
                 });
             }
 
@@ -133,14 +145,9 @@ pool.getConnection((err, connection) => {
                         const guestCount = parseInt(result.guest_count, 10);
 
 
-                        readContactIdsFromFile((err, ids) => {
-                            if (err) {
-                                console.error('Error reading file:', err);
-                            } else {
-                                console.log('IDs read from file:', ids);
-                            }
+                        readContactsIdsFromFile((idContactsObj) => {
+                            console.log('All IDs and Transaction IDs:', idContactsObj);
                         });
-
 
 
                         setTimeout(() => {
