@@ -544,7 +544,7 @@ pool.getConnection((err, connection) => {
                         });
 
 
-                    }, 10000 * (results.indexOf(result) + 1));
+                    }, 3000 * (results.indexOf(result) + 1));
                 }
 
 
