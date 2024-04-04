@@ -121,7 +121,7 @@ pool.getConnection((err, connection) => {
 
 
 
-                        setTimeout(() => {
+
                         const contacts = client.request.post('/api/v4/contacts', [
                             {
                                 "name": result.name + "",
@@ -184,7 +184,7 @@ pool.getConnection((err, connection) => {
                         }).catch((error) => {
                             console.error('Error creating leads:', error);
                         });
-                        }, 1000);
+
 
                         // const leads = client.request.post('/api/v4/leads/complex', [
                         //     {
