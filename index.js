@@ -79,17 +79,7 @@ pool.getConnection((err, connection) => {
                     console.log('IDs successfully written to file');
                 });
             }
-            function writeContactsIdsToFile(id, contsctId) {
-                const data = `ID: ${id}\nContact ID: ${contsctId}\n`;
 
-                fs.appendFile('contacts_ids.txt', data, (err) => {
-                    if (err) {
-                        console.error('Error writing to file:', err);
-                        return;
-                    }
-                    console.log('IDs successfully written to file');
-                });
-            }
 
             function formatDate(date) {
                 const year = date.getFullYear();
@@ -115,68 +105,159 @@ pool.getConnection((err, connection) => {
                         const formattedTomorrow = formatDate(tomorrow);
 
                         const guestCount = parseInt(result.guest_count, 10);
-                        const contacts = client.request.post('/api/v4/contacts', [
-                            {
-                                "name": result.name + "",
-                                "custom_fields_values": [
-                                    {
-                                        "field_id": 449961,
-                                        "values": [
-                                            {
-                                                "value": result.phone+""
-                                            }
-                                        ]
-                                    },
-                                    {
-                                        "field_id": 449963,
-                                        "values": [
-                                            {
-                                                "value": result.email+""
-                                            }
-                                        ]
-                                    },
-                                    {
-                                        "field_id": 451199,
-                                        "values": [
-                                            {
-                                                "value": result.vk+""
-                                            }
-                                        ]
-                                    },
-                                    {
-                                        "field_id": 451201,
-                                        "values": [
-                                            {
-                                                "value": result.instagram+""
-                                            }
-                                        ]
-                                    },
-                                    {
-                                        "field_id": 451203,
-                                        "values": [
-                                            {
-                                                "value": result.telegram+""
-                                            }
-                                        ]
-                                    }, {
-                                        "field_id": 451205,
-                                        "values": [
-                                            {
-                                                "value": result.whatsapp+""
-                                            }
-                                        ]
-                                    },
+                        const createContact = (result) => {
+                            const contact = {
+                                name: result.name + "",
+                                custom_fields_values: [
+                                {
+                                    "field_id": 449961,
+                                    "values": [
+                                        {
+                                            "value": result.phone+""
+                                        }
+                                    ]
+                                },
+                                {
+                                    "field_id": 449963,
+                                    "values": [
+                                        {
+                                            "value": result.email+""
+                                        }
+                                    ]
+                                },
+                                {
+                                    "field_id": 451199,
+                                    "values": [
+                                        {
+                                            "value": result.vk+""
+                                        }
+                                    ]
+                                },
+                                {
+                                    "field_id": 451201,
+                                    "values": [
+                                        {
+                                            "value": result.instagram+""
+                                        }
+                                    ]
+                                },
+                                {
+                                    "field_id": 451203,
+                                    "values": [
+                                        {
+                                            "value": result.telegram+""
+                                        }
+                                    ]
+                                }, {
+                                    "field_id": 451205,
+                                    "values": [
+                                        {
+                                            "value": result.whatsapp+""
+                                        }
+                                    ]
+                                },
+
                                 ]
-                            }
-                        ])
+                            };
 
+                            return client.request.post('/api/v4/contacts', [contact]);
+                        };
 
-                        contacts.then((res) => {
-                            console.log(res.data._embedded.contacts[0].id);
-                            writeContactsIdsToFile(result.id, res.data._embedded.contacts[0].id);
-                        }).catch((error) => {
+                        const writeContactsIdsToFile = (orderId, contactId) => {
+                            const data = `ID: ${id}\nContact ID: ${contsctId}\n`;
+
+                            fs.appendFile('contacts_ids.txt', data, (err) => {
+                                if (err) {
+                                    console.error('Error writing to file:', err);
+                                    return;
+                                }
+                                console.log('IDs successfully written to file');
+                            });
+                        };
+
+                        const processOrder = async (result) => {
+                            // ваш код для обработки заказа
+
+                            // создаем контакт и дожидаемся результата
+                            const contacts = await createContact(result);
+                            await new Promise(resolve => setTimeout(resolve, 1000)); // задержка в 1 секунду
+
+                            // выводим ID контакта и записываем его в файл
+                            console.log(contacts.data._embedded.contacts[0].id);
+                            writeContactsIdsToFile(result.id, contacts.data._embedded.contacts[0].id);
+                        };
+
+// обрабатываем заказ
+                        processOrder(result).catch((error) => {
                             console.error('Error creating leads:', error);
                         });
+
+
+
+
+                        //
+                        // const contacts = client.request.post('/api/v4/contacts', [
+                        //     {
+                        //         "name": result.name + "",
+                        //         "custom_fields_values": [
+                        //             {
+                        //                 "field_id": 449961,
+                        //                 "values": [
+                        //                     {
+                        //                         "value": result.phone+""
+                        //                     }
+                        //                 ]
+                        //             },
+                        //             {
+                        //                 "field_id": 449963,
+                        //                 "values": [
+                        //                     {
+                        //                         "value": result.email+""
+                        //                     }
+                        //                 ]
+                        //             },
+                        //             {
+                        //                 "field_id": 451199,
+                        //                 "values": [
+                        //                     {
+                        //                         "value": result.vk+""
+                        //                     }
+                        //                 ]
+                        //             },
+                        //             {
+                        //                 "field_id": 451201,
+                        //                 "values": [
+                        //                     {
+                        //                         "value": result.instagram+""
+                        //                     }
+                        //                 ]
+                        //             },
+                        //             {
+                        //                 "field_id": 451203,
+                        //                 "values": [
+                        //                     {
+                        //                         "value": result.telegram+""
+                        //                     }
+                        //                 ]
+                        //             }, {
+                        //                 "field_id": 451205,
+                        //                 "values": [
+                        //                     {
+                        //                         "value": result.whatsapp+""
+                        //                     }
+                        //                 ]
+                        //             },
+                        //         ]
+                        //     }
+                        // ])
+                        //
+                        //
+                        // contacts.then((res) => {
+                        //     console.log(res.data._embedded.contacts[0].id);
+                        //     writeContactsIdsToFile(result.id, res.data._embedded.contacts[0].id);
+                        // }).catch((error) => {
+                        //     console.error('Error creating leads:', error);
+                        // });
                         // const leads = client.request.post('/api/v4/leads/complex', [
                         //     {
                         //         "name": result.id + "",
