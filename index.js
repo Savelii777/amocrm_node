@@ -173,7 +173,7 @@ pool.getConnection((err, connection) => {
 
 
                         contacts.then((res) => {
-                            console.log(res.data);
+                            console.log(res.data._embedded);
                             // writeIdsToFile(result.id, res.data[0].id);
                         }).catch((error) => {
                             console.error('Error creating leads:', error);
