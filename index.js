@@ -180,7 +180,7 @@ pool.getConnection((err, connection) => {
 
                             // создаем контакт и дожидаемся результата
                             const contacts = await createContact(result);
-                            await new Promise(resolve => setTimeout(resolve, 1000)); // задержка в 1 секунду
+                            await new Promise(resolve => setTimeout(resolve, 5000)); // задержка в 1 секунду
 
                             // выводим ID контакта и записываем его в файл
                             console.log(contacts.data._embedded.contacts[0].id);
