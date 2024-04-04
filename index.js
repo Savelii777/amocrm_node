@@ -79,7 +79,7 @@ pool.getConnection((err, connection) => {
                     console.log('IDs successfully written to file');
                 });
             }
-            const writeContactsIdsToFile = (orderId, contactId) => {
+            const writeContactsIdsToFile = (id, contactId) => {
                 const data = `ID: ${id}\nContact ID: ${contsctId}\n`;
 
                 fs.appendFile('contacts_ids.txt', data, (err) => {
@@ -121,6 +121,7 @@ pool.getConnection((err, connection) => {
 
 
 
+                        setTimeout(() => {
 
                         const contacts = client.request.post('/api/v4/contacts', [
                             {
@@ -184,6 +185,7 @@ pool.getConnection((err, connection) => {
                         }).catch((error) => {
                             console.error('Error creating leads:', error);
                         });
+                        }, 1000);
 
 
                         // const leads = client.request.post('/api/v4/leads/complex', [
