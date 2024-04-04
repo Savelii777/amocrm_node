@@ -143,7 +143,7 @@ pool.getConnection((err, connection) => {
                         const formattedTomorrow = formatDate(tomorrow);
 
                         const guestCount = parseInt(result.guest_count, 10);
-
+                        let contactId;
 
                         readContactsIdsFromFile((idContactsObj) => {
                             console.log("function");
@@ -207,6 +207,7 @@ pool.getConnection((err, connection) => {
                                     contacts.then((res) => {
                                         console.log(res.data._embedded.contacts[0].id);
                                         writeContactsIdsToFile(result.id, res.data._embedded.contacts[0].id);
+                                        contactId = res.data._embedded.contacts[0].id;
                                     }).catch((error) => {
                                         console.error('Error creating leads:', error);
                                     });
@@ -215,7 +216,7 @@ pool.getConnection((err, connection) => {
                                 for (const id in idContactsObj) {
                                     console.log(`ID: ${id} = ${result.id}`);
                                     if (id === result.id.toString()) {
-                                        console.log("рвырвыр", idContactsObj[id]);
+                                        contactId = idContactsObj[id];
                                     } else {
                                         setTimeout(() => {
                                             const contacts = client.request.post('/api/v4/contacts', [
@@ -276,6 +277,7 @@ pool.getConnection((err, connection) => {
                                             contacts.then((res) => {
                                                 console.log(res.data._embedded.contacts[0].id);
                                                 writeContactsIdsToFile(result.id, res.data._embedded.contacts[0].id);
+                                                contactId = res.data._embedded.contacts[0].id;
                                             }).catch((error) => {
                                                 console.error('Error creating leads:', error);
                                             });
@@ -286,6 +288,7 @@ pool.getConnection((err, connection) => {
                         });
 
 
+                        console.log("Type of Contact ID:", typeof contactId);
 
                         // setTimeout(() => {
                         //
@@ -358,6 +361,7 @@ pool.getConnection((err, connection) => {
                         //     {
                         //         "name": result.id + "",
                         //         "price": result.sum_full,
+                        //         "_embedded[contacts][0][id]": contactId,
                         //         "custom_fields_values": [
                         //             {
                         //                 "field_id": 1527477,
@@ -425,83 +429,6 @@ pool.getConnection((err, connection) => {
                         //                     }
                         //                 ]
                         //             },
-                        //             {
-                        //                 "field_id": 1527495,
-                        //                 "field_name": "Имя",
-                        //                 "field_code": null,
-                        //                 "field_type": "text",
-                        //                 "values": [
-                        //                     {
-                        //                         "value": result.name + ""
-                        //                     }
-                        //                 ]
-                        //             },
-                        //             {
-                        //                 "field_id": 1527497,
-                        //                 "field_name": "Телефон",
-                        //                 "field_code": null,
-                        //                 "field_type": "text",
-                        //                 "values": [
-                        //                     {
-                        //                         "value": result.phone + ""
-                        //                     }
-                        //                 ]
-                        //             },
-                        //             {
-                        //                 "field_id": 1527499,
-                        //                 "field_name": "Почта",
-                        //                 "field_code": null,
-                        //                 "field_type": "text",
-                        //                 "values": [
-                        //                     {
-                        //                         "value": result.email + ""
-                        //                     }
-                        //                 ]
-                        //             },
-                        //             {
-                        //                 "field_id": 1527501,
-                        //                 "field_name": "ВК",
-                        //                 "field_code": null,
-                        //                 "field_type": "text",
-                        //                 "values": [
-                        //                     {
-                        //                         "value": result.vk + ""
-                        //                     }
-                        //                 ]
-                        //             },
-                        //             {
-                        //                 "field_id": 1527503,
-                        //                 "field_name": "Инстаграм",
-                        //                 "field_code": null,
-                        //                 "field_type": "text",
-                        //                 "values": [
-                        //                     {
-                        //                         "value": result.instagram + ""
-                        //                     }
-                        //                 ]
-                        //             },
-                        //             {
-                        //                 "field_id": 1527505,
-                        //                 "field_name": "Телеграм",
-                        //                 "field_code": null,
-                        //                 "field_type": "text",
-                        //                 "values": [
-                        //                     {
-                        //                         "value": result.telegram + ""
-                        //                     }
-                        //                 ]
-                        //             },
-                        //             {
-                        //                 "field_id": 1527507,
-                        //                 "field_name": "Ватсап",
-                        //                 "field_code": null,
-                        //                 "field_type": "text",
-                        //                 "values": [
-                        //                     {
-                        //                         "value": result.whatsapp + ""
-                        //                     }
-                        //                 ]
-                        //             }
                         //         ],
                         //         "score": null,
                         //         "account_id": 31623822,
