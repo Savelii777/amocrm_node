@@ -210,12 +210,12 @@ pool.getConnection((err, connection) => {
                                     }).catch((error) => {
                                         console.error('Error creating leads:', error);
                                     });
-                                }, 10000);
+                                }, 1000);
                             } else {
                                 for (const id in idContactsObj) {
                                     console.log(`ID: ${id} = ${result.id}`);
                                     if (id === result.id.toString()) {
-                                        console.log('ура');
+                                        console.log(`${id[result.id]}`);
                                     } else {
                                         setTimeout(() => {
                                             const contacts = client.request.post('/api/v4/contacts', [
@@ -279,7 +279,7 @@ pool.getConnection((err, connection) => {
                                             }).catch((error) => {
                                                 console.error('Error creating leads:', error);
                                             });
-                                        }, 10000);
+                                        }, 1000);
                                     }
                                 }
                             }
@@ -652,7 +652,7 @@ pool.getConnection((err, connection) => {
         });
     }
     runTask();
-    setInterval(runTask, 1000);
+    setInterval(runTask, 5*60*1000);
     connection.release();
 });
 
