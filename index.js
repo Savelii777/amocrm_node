@@ -105,13 +105,21 @@ pool.getConnection((err, connection) => {
 
                         const guestCount = parseInt(result.guest_count, 10);
                         const contacts = client.request.get('/api/v4/contacts')
-                        contacts.then((res) => {
-                            const contactsData = res.data._embedded;
-                            for (const key in contactsData) {
-                                if (contactsData.hasOwnProperty(key)) {
-                                    console.log(key + ':', contactsData[key]);
+                        function printObject(obj, prefix = '') {
+                            for (const key in obj) {
+                                if (obj.hasOwnProperty(key)) {
+                                    const value = obj[key];
+                                    if (typeof value === 'object' && value !== null) {
+                                        printObject(value, prefix + key + '.');
+                                    } else {
+                                        console.log(prefix + key + ':', value);
+                                    }
                                 }
                             }
+                        }
+
+                        contacts.then((res) => {
+                            printObject(res.data);
                         }).catch((error) => {
                             console.error('Error creating leads:', error);
                         });
