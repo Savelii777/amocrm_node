@@ -6,6 +6,7 @@ const mysql = require('mysql');
 const MySQLEvents = require('@rodrigogs/mysql-events');
 const os = require('os');
 const cron = require('node-cron');
+const dotenv = require('dotenv');
 const fs = require('fs');
 
 
@@ -13,33 +14,58 @@ const fs = require('fs');
 const app = express();
 app.use(cors());
 
-const token = {
-    "token_type": "Bearer",
-    "expires_in": 86400,
-    "access_token":"eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6Ijk2YzFiYTQ0N2ExYThiMDczMWIyMDA4YTkxYTIxNzhhN2RkZTgzNTVjMjU5NGE0Y2ZiN2QyOTk4MmI5MGZkNjY1ZGYyYzVhOGNlYjYyYTU4In0.eyJhdWQiOiI2ZDJmZjBlZi03MmRiLTQ4ZTAtYjFiNS1lODJkNWViYmZhMTciLCJqdGkiOiI5NmMxYmE0NDdhMWE4YjA3MzFiMjAwOGE5MWEyMTc4YTdkZGU4MzU1YzI1OTRhNGNmYjdkMjk5ODJiOTBmZDY2NWRmMmM1YThjZWI2MmE1OCIsImlhdCI6MTcxMjIxNzEwMSwibmJmIjoxNzEyMjE3MTAxLCJleHAiOjE3NDQyNDMyMDAsInN1YiI6IjEwNzgzMzE4IiwiZ3JhbnRfdHlwZSI6IiIsImFjY291bnRfaWQiOjMxNjc5ODAyLCJiYXNlX2RvbWFpbiI6ImFtb2NybS5ydSIsInZlcnNpb24iOjIsInNjb3BlcyI6WyJjcm0iLCJmaWxlcyIsImZpbGVzX2RlbGV0ZSIsIm5vdGlmaWNhdGlvbnMiLCJwdXNoX25vdGlmaWNhdGlvbnMiXSwiaGFzaF91dWlkIjoiMjE1OTdlZWItMDAzMi00OTA0LWI5NTItOGJiYWI0MTdlZWNmIn0.O758bUphis2-9E3-GZ_i32-S6gKQzQNES89GNMItk39mykEK0fKnwrkWVKHEF-ISapkD3bncjx41A7y4Fog8CsanoTP4JpgT1fR6A3woxiWePsOpweGMcK0YNK2yQkwsbtQD6c2TuhFl6B6153Mnh6BaPTtqHV98r5mS-DLGI2AVAxaJr7kxb1mOtbGZayj-2LllBROyJcYBXX3BntuFbH6B2sFIaHllLgTnxpcg_-aov1S0cbZiBeT_q7AitbOuLbflCskCOIVmXKclTj1rUz0fv_6xkfwGULu4EmztFvYc6RFhdYttFxyazGBJJ1IQfGw07_kYUvtE6fztkPl6MQ"
-};
+// const token = {
+//     "token_type": "Bearer",
+//     "expires_in": 86400,
+//     "access_token":"eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6Ijk2YzFiYTQ0N2ExYThiMDczMWIyMDA4YTkxYTIxNzhhN2RkZTgzNTVjMjU5NGE0Y2ZiN2QyOTk4MmI5MGZkNjY1ZGYyYzVhOGNlYjYyYTU4In0.eyJhdWQiOiI2ZDJmZjBlZi03MmRiLTQ4ZTAtYjFiNS1lODJkNWViYmZhMTciLCJqdGkiOiI5NmMxYmE0NDdhMWE4YjA3MzFiMjAwOGE5MWEyMTc4YTdkZGU4MzU1YzI1OTRhNGNmYjdkMjk5ODJiOTBmZDY2NWRmMmM1YThjZWI2MmE1OCIsImlhdCI6MTcxMjIxNzEwMSwibmJmIjoxNzEyMjE3MTAxLCJleHAiOjE3NDQyNDMyMDAsInN1YiI6IjEwNzgzMzE4IiwiZ3JhbnRfdHlwZSI6IiIsImFjY291bnRfaWQiOjMxNjc5ODAyLCJiYXNlX2RvbWFpbiI6ImFtb2NybS5ydSIsInZlcnNpb24iOjIsInNjb3BlcyI6WyJjcm0iLCJmaWxlcyIsImZpbGVzX2RlbGV0ZSIsIm5vdGlmaWNhdGlvbnMiLCJwdXNoX25vdGlmaWNhdGlvbnMiXSwiaGFzaF91dWlkIjoiMjE1OTdlZWItMDAzMi00OTA0LWI5NTItOGJiYWI0MTdlZWNmIn0.O758bUphis2-9E3-GZ_i32-S6gKQzQNES89GNMItk39mykEK0fKnwrkWVKHEF-ISapkD3bncjx41A7y4Fog8CsanoTP4JpgT1fR6A3woxiWePsOpweGMcK0YNK2yQkwsbtQD6c2TuhFl6B6153Mnh6BaPTtqHV98r5mS-DLGI2AVAxaJr7kxb1mOtbGZayj-2LllBROyJcYBXX3BntuFbH6B2sFIaHllLgTnxpcg_-aov1S0cbZiBeT_q7AitbOuLbflCskCOIVmXKclTj1rUz0fv_6xkfwGULu4EmztFvYc6RFhdYttFxyazGBJJ1IQfGw07_kYUvtE6fztkPl6MQ"
+// };
+//
+// const client = new Client({
+//     domain: 'savelii777',
+//     auth: {
+//         client_id: '6d2ff0ef-72db-48e0-b1b5-e82d5ebbfa17',
+//         client_secret: 'kiQaUAGryAJNigag2kJbfbu7DQOtaZoQZBCqHIEktLQ94oezPD44TsIbznPgcJO1',
+//         redirect_uri: 'https://домик-влесу.рф/',
+//         code: 'def502007fe04c121790523cb495421e2cefbddefbc611628b5eabbb70c52da3676304767d32948a300fc44bac67183cc1f55baed512393c0ee1eb2073df08dfc02254e591370a8468383b443eaf2ea374f61de3ddc615c681592a26a20ca5af39378ead09377dae8213fb197b865cf2145cea5b1b5143dd1cb6d32e55bc9b0953635056aa4aa70513d2124f55337716e9016cf7fb795f6cb4261e6497dfc3747965d2f47cc0bc7757057ea2cd9752c80bf7304575b5142fce5c34e5978b90d6748a6d6ae58a15103f17117c03e5cea51cfc131770061b4ca34631f2f44593eb67cd98c67c675d69b6c90a8dcd6e712c96ebb9827d4185ed433d644a71b2f3b06f6b54d978f5c6619d4f377bd5e5ca6fcb47a2fedac6aa18f7704346fe7c49e68bf1964941daf6406fd848e4d6ae22dc70aac3e5f3e9199ff5cf7d5282b1540d7ebaf88db0402b8749f399239f78a67ad5dcf0ca699bb0542c7145f3b957eb692e6daaf694798101698ab883e5439da4453861b830f3fa008a4a010c06fba9cac4017a37cff5365c66b2b48c7fb7e9422256f6e640ca958eb6b8ac001d5855ec66dd79e71f870075a3c887f350c455672b9d38ffad6a2461559413f4d211461c914f3ef544c879b9e7d406ab89beeab676b077328e020e3bf1d526486dad6e179e072ea9da9a15a68953547b5dffba31fb2c826b730f65'
+//     },
+// });
+//
+// client.token.setValue(token);
+//
+// const pool = mysql.createPool({
+//     host: 'localhost',
+//     user: 'admin_d-vlesu',
+//     password: 'cb37J8tK02',
+//     database: 'admin_d-vlesu',
+//     port: 3306,
+//     connectionLimit: 10, // Установить максимальное количество соединений в пуле
+// });
+dotenv.config();
 
+// Прочитать файл config.json
+const config = JSON.parse(fs.readFileSync('config.json', 'utf8'));
+
+// Инициализировать переменные
+const token = config.token;
 const client = new Client({
-    domain: 'savelii777',
+    domain: config.client.domain,
     auth: {
-        client_id: '6d2ff0ef-72db-48e0-b1b5-e82d5ebbfa17',
-        client_secret: 'kiQaUAGryAJNigag2kJbfbu7DQOtaZoQZBCqHIEktLQ94oezPD44TsIbznPgcJO1',
-        redirect_uri: 'https://домик-влесу.рф/',
-        code: 'def502007fe04c121790523cb495421e2cefbddefbc611628b5eabbb70c52da3676304767d32948a300fc44bac67183cc1f55baed512393c0ee1eb2073df08dfc02254e591370a8468383b443eaf2ea374f61de3ddc615c681592a26a20ca5af39378ead09377dae8213fb197b865cf2145cea5b1b5143dd1cb6d32e55bc9b0953635056aa4aa70513d2124f55337716e9016cf7fb795f6cb4261e6497dfc3747965d2f47cc0bc7757057ea2cd9752c80bf7304575b5142fce5c34e5978b90d6748a6d6ae58a15103f17117c03e5cea51cfc131770061b4ca34631f2f44593eb67cd98c67c675d69b6c90a8dcd6e712c96ebb9827d4185ed433d644a71b2f3b06f6b54d978f5c6619d4f377bd5e5ca6fcb47a2fedac6aa18f7704346fe7c49e68bf1964941daf6406fd848e4d6ae22dc70aac3e5f3e9199ff5cf7d5282b1540d7ebaf88db0402b8749f399239f78a67ad5dcf0ca699bb0542c7145f3b957eb692e6daaf694798101698ab883e5439da4453861b830f3fa008a4a010c06fba9cac4017a37cff5365c66b2b48c7fb7e9422256f6e640ca958eb6b8ac001d5855ec66dd79e71f870075a3c887f350c455672b9d38ffad6a2461559413f4d211461c914f3ef544c879b9e7d406ab89beeab676b077328e020e3bf1d526486dad6e179e072ea9da9a15a68953547b5dffba31fb2c826b730f65'
+        client_id: config.client.auth.client_id,
+        client_secret: config.client.auth.client_secret,
+        redirect_uri: config.client.auth.redirect_uri,
+        code: config.client.auth.code,
     },
 });
-
 client.token.setValue(token);
 
 const pool = mysql.createPool({
-    host: 'localhost',
-    user: 'admin_d-vlesu',
-    password: 'cb37J8tK02',
-    database: 'admin_d-vlesu',
-    port: 3306,
-    connectionLimit: 10, // Установить максимальное количество соединений в пуле
+    host: config.pool.host,
+    user: config.pool.user,
+    password: config.pool.password,
+    database: config.pool.database,
+    port: config.pool.port,
+    connectionLimit: config.pool.connectionLimit,
 });
-
 pool.on('error', (error) => {
     console.error('Ошибка подключения к базе данных:', error);
 });
