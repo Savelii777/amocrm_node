@@ -278,6 +278,7 @@ pool.getConnection((err, connection) => {
                                                 console.log(res.data._embedded.contacts[0].id);
                                                 writeContactsIdsToFile(result.id, res.data._embedded.contacts[0].id);
                                                 contactId = res.data._embedded.contacts[0].id;
+                                                console.log(contactId+ "jsijasjaisjiasjasoa");
                                             }).catch((error) => {
                                                 console.error('Error creating leads:', error);
                                             });
@@ -288,7 +289,6 @@ pool.getConnection((err, connection) => {
                         });
 
 
-                        console.log("Type of Contact ID:", typeof contactId);
 
                         // setTimeout(() => {
                         //
