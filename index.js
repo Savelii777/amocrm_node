@@ -104,7 +104,7 @@ pool.getConnection((err, connection) => {
                     }
 
                     const idContactsObj = {};
-                    const regex = /ID:\s*(\d+)\s*Contract ID:\s*(\d+)/g;
+                    const regex  = /ID:\s*(\d+)\s*[\n\r]+\s*Contact ID:\s*(\d+)/g;
                     let match;
 
                     while ((match = regex.exec(data)) !== null) {
