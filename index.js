@@ -63,6 +63,7 @@ pool.getConnection((err, connection) => {
     const runTask = () => {
         // const query = `SELECT bookings.*, clients.* FROM bookings INNER JOIN clients ON bookings.client_id = clients.id WHERE bookings.created_at >= DATE_SUB(NOW(), INTERVAL 5 MINUTE) ORDER BY bookings.created_at DESC;`;
         const query = 'SELECT bookings.*, clients.* FROM bookings INNER JOIN clients ON bookings.client_id = clients.id ORDER BY bookings.created_at DESC LIMIT 5';
+        let contactId;
 
         connection.query(query, (err, results) => {
             console.log(query);
@@ -143,7 +144,6 @@ pool.getConnection((err, connection) => {
                         const formattedTomorrow = formatDate(tomorrow);
 
                         const guestCount = parseInt(result.guest_count, 10);
-                        let contactId;
 
                         readContactsIdsFromFile((idContactsObj) => {
                             console.log("function");
@@ -278,7 +278,6 @@ pool.getConnection((err, connection) => {
                                                 console.log(res.data._embedded.contacts[0].id);
                                                 writeContactsIdsToFile(result.id, res.data._embedded.contacts[0].id);
                                                 contactId = res.data._embedded.contacts[0].id;
-                                                console.log(contactId+ "jsijasjaisjiasjasoa");
                                             }).catch((error) => {
                                                 console.error('Error creating leads:', error);
                                             });
@@ -289,6 +288,7 @@ pool.getConnection((err, connection) => {
                         });
 
 
+                        console.log("Type of Contact ID:", typeof contactId);
 
                         // setTimeout(() => {
                         //
