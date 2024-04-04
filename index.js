@@ -20,7 +20,7 @@ const token = {
 };
 
 const client = new Client({
-    domain: 'kristinakp04',
+    domain: 'savelii777',
     auth: {
         client_id: '6d2ff0ef-72db-48e0-b1b5-e82d5ebbfa17',
         client_secret: 'kiQaUAGryAJNigag2kJbfbu7DQOtaZoQZBCqHIEktLQ94oezPD44TsIbznPgcJO1',
