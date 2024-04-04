@@ -146,6 +146,7 @@ pool.getConnection((err, connection) => {
 
 
                         readContactsIdsFromFile((idContactsObj) => {
+                            console.log("function");
                             for (const id in idContactsObj) {
                                 console.log(`ID: ${id} = ${result.id}`);
                                 if (id === result.id) {
