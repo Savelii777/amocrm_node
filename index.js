@@ -80,7 +80,7 @@ pool.getConnection((err, connection) => {
                 });
             }
             const writeContactsIdsToFile = (id, contactId) => {
-                const data = `ID: ${id}\nContact ID: ${contsctId}\n`;
+                const data = `ID: ${id}\nContact ID: ${contactId}\n`;
 
                 fs.appendFile('contacts_ids.txt', data, (err) => {
                     if (err) {
