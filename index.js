@@ -106,7 +106,7 @@ pool.getConnection((err, connection) => {
                         const guestCount = parseInt(result.guest_count, 10);
                         const contacts = client.request.get('/api/v4/contacts')
                         contacts.then((res) => {
-                            console.log(res);
+                                    console.log('Lead created successfully with ID:', res.data);
 
                         }).catch((error) => {
                             console.error('Error creating leads:', error);
