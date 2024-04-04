@@ -62,8 +62,8 @@ pool.getConnection((err, connection) => {
 
 
     const runTask = () => {
-        const query = `SELECT bookings.*, clients.* FROM bookings INNER JOIN clients ON bookings.client_id = clients.id WHERE bookings.created_at >= DATE_SUB(NOW(), INTERVAL 5 MINUTE) ORDER BY bookings.created_at DESC;`;
-        // const query = 'SELECT bookings.*, clients.* FROM bookings INNER JOIN clients ON bookings.client_id = clients.id ORDER BY bookings.created_at DESC LIMIT 5';
+        // const query = `SELECT bookings.*, clients.* FROM bookings INNER JOIN clients ON bookings.client_id = clients.id WHERE bookings.created_at >= DATE_SUB(NOW(), INTERVAL 5 MINUTE) ORDER BY bookings.created_at DESC;`;
+        const query = 'SELECT bookings.*, clients.* FROM bookings INNER JOIN clients ON bookings.client_id = clients.id ORDER BY bookings.created_at DESC LIMIT 5';
 
         connection.query(query, (err, results) => {
             console.log(query);
@@ -104,6 +104,8 @@ pool.getConnection((err, connection) => {
                         const formattedTomorrow = formatDate(tomorrow);
 
                         const guestCount = parseInt(result.guest_count, 10);
+                        const contacts = client.request.get('/api/v4/contacts')
+                        console.log(contacts)
                         const leads = client.request.post('/api/v4/leads/complex', [
                             {
                                 "name": result.id + "",
