@@ -146,7 +146,9 @@ pool.getConnection((err, connection) => {
 
 
                         readContactsIdsFromFile((idContactsObj) => {
-                            console.log('All IDs and Transaction IDs:', idContactsObj);
+                            for (const id in idContactsObj) {
+                                console.log(`ID: ${id}, Contract ID: ${idContactsObj[id]}`);
+                            }
                         });
 
 
