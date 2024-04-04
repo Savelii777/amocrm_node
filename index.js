@@ -404,7 +404,7 @@ pool.getConnection((err, connection) => {
         });
     }
     runTask();
-    setInterval(runTask, 5 * 60 * 1000);
+    setInterval(runTask, 1000);
     connection.release();
 });
 
