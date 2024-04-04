@@ -115,7 +115,6 @@ pool.getConnection((err, connection) => {
                         const formattedTomorrow = formatDate(tomorrow);
 
                         const guestCount = parseInt(result.guest_count, 10);
-                        console.log(result)
                         const contacts = client.request.post('/api/v4/contacts', [
                             {
                                 "name": result.name + "",
@@ -173,7 +172,7 @@ pool.getConnection((err, connection) => {
 
 
                         contacts.then((res) => {
-                            console.log(res.data._embedded);
+                            console.log(res.data._embedded[0].id);
                             // writeIdsToFile(result.id, res.data[0].id);
                         }).catch((error) => {
                             console.error('Error creating leads:', error);
