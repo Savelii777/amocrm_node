@@ -116,7 +116,46 @@ pool.getConnection((err, connection) => {
                                                 "value": result.phone+""
                                             }
                                         ]
-                                    }
+                                    },
+                                    {
+                                        "field_id": 449963,
+                                        "values": [
+                                            {
+                                                "value": result.email+""
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "field_id": 451199,
+                                        "values": [
+                                            {
+                                                "value": result.vk+""
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "field_id": 451201,
+                                        "values": [
+                                            {
+                                                "value": result.instagram+""
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "field_id": 451203,
+                                        "values": [
+                                            {
+                                                "value": result.telegram+""
+                                            }
+                                        ]
+                                    }, {
+                                        "field_id": 451205,
+                                        "values": [
+                                            {
+                                                "value": result.whatsapp+""
+                                            }
+                                        ]
+                                    },
                                 ]
                             }
                         ])
