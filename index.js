@@ -104,22 +104,25 @@ pool.getConnection((err, connection) => {
                         const formattedTomorrow = formatDate(tomorrow);
 
                         const guestCount = parseInt(result.guest_count, 10);
-                        const contacts = client.request.get('/api/v4/contacts')
-                        function printObject(obj, prefix = '') {
-                            for (const key in obj) {
-                                if (obj.hasOwnProperty(key)) {
-                                    const value = obj[key];
-                                    if (typeof value === 'object' && value !== null) {
-                                        printObject(value, prefix + key + '.');
-                                    } else {
-                                        console.log(prefix + key + ':', value);
+                        const contacts = client.request.post('/api/v4/contacts', [
+                            {
+                                "name": result.name + "",
+                                "custom_fields_values": [
+                                    {
+                                        "field_id": 449961,
+                                        "values": [
+                                            {
+                                                "value": result.phone+""
+                                            }
+                                        ]
                                     }
-                                }
+                                ]
                             }
-                        }
+                        ])
+
 
                         contacts.then((res) => {
-                            printObject(res.data);
+                            console.log(res.data);
                         }).catch((error) => {
                             console.error('Error creating leads:', error);
                         });
