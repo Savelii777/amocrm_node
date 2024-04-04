@@ -104,6 +104,7 @@ pool.getConnection((err, connection) => {
                         const formattedTomorrow = formatDate(tomorrow);
 
                         const guestCount = parseInt(result.guest_count, 10);
+                        console.log(result)
                         const contacts = client.request.post('/api/v4/contacts', [
                             {
                                 "name": result.name + "",
