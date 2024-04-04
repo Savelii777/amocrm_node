@@ -210,7 +210,7 @@ pool.getConnection((err, connection) => {
                                     }).catch((error) => {
                                         console.error('Error creating leads:', error);
                                     });
-                                }, 1000);
+                                }, 10000);
                             } else {
                                 for (const id in idContactsObj) {
                                     console.log(`ID: ${id} = ${result.id}`);
@@ -279,7 +279,7 @@ pool.getConnection((err, connection) => {
                                             }).catch((error) => {
                                                 console.error('Error creating leads:', error);
                                             });
-                                        }, 1000);
+                                        }, 10000);
                                     }
                                 }
                             }
