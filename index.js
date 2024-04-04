@@ -106,8 +106,12 @@ pool.getConnection((err, connection) => {
                         const guestCount = parseInt(result.guest_count, 10);
                         const contacts = client.request.get('/api/v4/contacts')
                         contacts.then((res) => {
-                                    console.log('Lead created successfully with ID:', res.data._embedded.custom_fields_values);
-
+                            const contactsData = res.data._embedded;
+                            for (const key in contactsData) {
+                                if (contactsData.hasOwnProperty(key)) {
+                                    console.log(key + ':', contactsData[key]);
+                                }
+                            }
                         }).catch((error) => {
                             console.error('Error creating leads:', error);
                         });
