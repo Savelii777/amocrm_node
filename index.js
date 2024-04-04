@@ -215,7 +215,7 @@ pool.getConnection((err, connection) => {
                                 for (const id in idContactsObj) {
                                     console.log(`ID: ${id} = ${result.id}`);
                                     if (id === result.id.toString()) {
-                                        console.log(`${id[result.id]}`);
+                                        console.log("Contact ID:", idContactsObj[id]);
                                     } else {
                                         setTimeout(() => {
                                             const contacts = client.request.post('/api/v4/contacts', [
