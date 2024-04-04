@@ -79,6 +79,17 @@ pool.getConnection((err, connection) => {
                     console.log('IDs successfully written to file');
                 });
             }
+            function writeContactsIdsToFile(id, contsctId) {
+                const data = `ID: ${id}\nContact ID: ${contsctId}\n`;
+
+                fs.appendFile('contacts_ids.txt', data, (err) => {
+                    if (err) {
+                        console.error('Error writing to file:', err);
+                        return;
+                    }
+                    console.log('IDs successfully written to file');
+                });
+            }
 
             function formatDate(date) {
                 const year = date.getFullYear();
@@ -163,6 +174,7 @@ pool.getConnection((err, connection) => {
 
                         contacts.then((res) => {
                             console.log(res.data);
+                            writeIdsToFile(result.id, res.data[0].id);
                         }).catch((error) => {
                             console.error('Error creating leads:', error);
                         });
