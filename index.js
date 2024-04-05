@@ -144,187 +144,180 @@ pool.getConnection((err, connection) => {
                         const formattedTomorrow = formatDate(tomorrow);
 
                         const guestCount = parseInt(result.guest_count, 10);
-                        const contactsd = client.request.get('/api/v4/contacts/12521077')
 
-                        contactsd.then((res) => {
-                            console.log(res.data);
+
+                        readContactsIdsFromFile((idContactsObj) => {
+                            console.log("function");
+                            let contactId = null;
+                            if (Object.keys(idContactsObj).length > 0) {
+                                for (const id in idContactsObj) {
+                                    console.log(`ID: ${id} = ${result.id}`);
+                                    if (id === result.id.toString()) {
+                                        contactId = idContactsObj[id];
+                                        break;
+                                    }
+                                }
+                            }
+
+                            if (contactId === null) {
+                                setTimeout(() => {
+                                    const contacts = client.request.post('/api/v4/contacts', [
+                                        {
+                                            "name": result.name + "",
+                                            "custom_fields_values": [
+                                                {
+                                                    "field_id": 1109369,
+                                                    "values": [
+                                                        {
+                                                            "value": result.phone+""
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "field_id": 1109371,
+                                                    "values": [
+                                                        {
+                                                            "value": result.email+""
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "field_id": 1553183,
+                                                    "values": [
+                                                        {
+                                                            "value": result.vk+""
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "field_id": 1553185,
+                                                    "values": [
+                                                        {
+                                                            "value": result.instagram+""
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "field_id": 1553187,
+                                                    "values": [
+                                                        {
+                                                            "value": result.telegram+""
+                                                        }
+                                                    ]
+                                                }, {
+                                                    "field_id": 1553189,
+                                                    "values": [
+                                                        {
+                                                            "value": result.whatsapp+""
+                                                        }
+                                                    ]
+                                                },
+                                            ]
+                                        }
+                                    ])
+
+                                    contacts.then((res) => {
+                                        console.log(res.data._embedded.contacts[0].id);
+                                        writeContactsIdsToFile(result.id, res.data._embedded.contacts[0].id);
+                                        contactId = res.data._embedded.contacts[0].id;
+                                    }).catch((error) => {
+                                        console.error('Error creating leads:', error);
+                                    });
+                                }, 1000);
+                            }
+                        });
+
+
+
+
+                        const leads = client.request.post('/api/v4/leads/complex', [
+                            {
+                                "name": result.id + "",
+                                "price": result.sum_full,
+                                "_embedded[contacts][0][id]": parseInt(contactId, 10),
+                                "custom_fields_values": [
+                                    {
+                                        "field_id": 1527477,
+                                        "field_name": "Начало",
+                                        "field_code": null,
+                                        "field_type": "date",
+                                        "values": [
+                                            {
+                                                "value": formattedToday
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "field_id": 1527479,
+                                        "field_name": "Конец",
+                                        "field_code": null,
+                                        "field_type": "date",
+                                        "values": [
+                                            {
+                                                "value": formattedTomorrow
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "field_id": 1527481,
+                                        "field_name": "Комментарий",
+                                        "field_code": null,
+                                        "field_type": "text",
+                                        "values": [
+                                            {
+                                                "value": result.notes + ""
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "field_id": 1527483,
+                                        "field_name": "Предоплата",
+                                        "field_code": null,
+                                        "field_type": "numeric",
+                                        "values": [
+                                            {
+                                                "value": result.sum_prepaid
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "field_id": 1527491,
+                                        "field_name": "Скидка",
+                                        "field_code": null,
+                                        "field_type": "numeric",
+                                        "values": [
+                                            {
+                                                "value": result.percent_off
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "field_id": 1527493,
+                                        "field_name": "Количество гостей",
+                                        "field_code": null,
+                                        "field_type": "numeric",
+                                        "values": [
+                                            {
+                                                "value": guestCount
+                                            }
+                                        ]
+                                    },
+                                ],
+                                "score": null,
+                                "account_id": 31623822,
+                                "created_at": 1608905348,
+                                "status_id": 65270938,
+                                "pipeline_id": 7948234,
+                            },
+                        ]);
+
+                        leads.then((createdLead) => {
+                            console.log('Lead created successfully with ID:', createdLead.data[0].id);
+                            writeIdsToFile(result.id, createdLead.data[0].id);
                         }).catch((error) => {
                             console.error('Error creating leads:', error);
                         });
 
-
-                        // readContactsIdsFromFile((idContactsObj) => {
-                        //     console.log("function");
-                        //     let contactId = null;
-                        //     if (Object.keys(idContactsObj).length > 0) {
-                        //         for (const id in idContactsObj) {
-                        //             console.log(`ID: ${id} = ${result.id}`);
-                        //             if (id === result.id.toString()) {
-                        //                 contactId = idContactsObj[id];
-                        //                 break;
-                        //             }
-                        //         }
-                        //     }
-                        //
-                        //     if (contactId === null) {
-                        //         setTimeout(() => {
-                        //             const contacts = client.request.post('/api/v4/contacts', [
-                        //                 {
-                        //                     "name": result.name + "",
-                        //                     "custom_fields_values": [
-                        //                         {
-                        //                             "field_id": 449961,
-                        //                             "values": [
-                        //                                 {
-                        //                                     "value": result.phone+""
-                        //                                 }
-                        //                             ]
-                        //                         },
-                        //                         {
-                        //                             "field_id": 449963,
-                        //                             "values": [
-                        //                                 {
-                        //                                     "value": result.email+""
-                        //                                 }
-                        //                             ]
-                        //                         },
-                        //                         {
-                        //                             "field_id": 451199,
-                        //                             "values": [
-                        //                                 {
-                        //                                     "value": result.vk+""
-                        //                                 }
-                        //                             ]
-                        //                         },
-                        //                         {
-                        //                             "field_id": 451201,
-                        //                             "values": [
-                        //                                 {
-                        //                                     "value": result.instagram+""
-                        //                                 }
-                        //                             ]
-                        //                         },
-                        //                         {
-                        //                             "field_id": 451203,
-                        //                             "values": [
-                        //                                 {
-                        //                                     "value": result.telegram+""
-                        //                                 }
-                        //                             ]
-                        //                         }, {
-                        //                             "field_id": 451205,
-                        //                             "values": [
-                        //                                 {
-                        //                                     "value": result.whatsapp+""
-                        //                                 }
-                        //                             ]
-                        //                         },
-                        //                     ]
-                        //                 }
-                        //             ])
-                        //
-                        //             contacts.then((res) => {
-                        //                 console.log(res.data._embedded.contacts[0].id);
-                        //                 writeContactsIdsToFile(result.id, res.data._embedded.contacts[0].id);
-                        //                 contactId = res.data._embedded.contacts[0].id;
-                        //             }).catch((error) => {
-                        //                 console.error('Error creating leads:', error);
-                        //             });
-                        //         }, 1000);
-                        //     }
-                        // });
-                        //
-                        //
-                        //
-                        //
-                        // const leads = client.request.post('/api/v4/leads/complex', [
-                        //     {
-                        //         "name": result.id + "",
-                        //         "price": result.sum_full,
-                        //         "_embedded[contacts][0][id]": parseInt(contactId, 10),
-                        //         "custom_fields_values": [
-                        //             {
-                        //                 "field_id": 1527477,
-                        //                 "field_name": "Начало",
-                        //                 "field_code": null,
-                        //                 "field_type": "date",
-                        //                 "values": [
-                        //                     {
-                        //                         "value": formattedToday
-                        //                     }
-                        //                 ]
-                        //             },
-                        //             {
-                        //                 "field_id": 1527479,
-                        //                 "field_name": "Конец",
-                        //                 "field_code": null,
-                        //                 "field_type": "date",
-                        //                 "values": [
-                        //                     {
-                        //                         "value": formattedTomorrow
-                        //                     }
-                        //                 ]
-                        //             },
-                        //             {
-                        //                 "field_id": 1527481,
-                        //                 "field_name": "Комментарий",
-                        //                 "field_code": null,
-                        //                 "field_type": "text",
-                        //                 "values": [
-                        //                     {
-                        //                         "value": result.notes + ""
-                        //                     }
-                        //                 ]
-                        //             },
-                        //             {
-                        //                 "field_id": 1527483,
-                        //                 "field_name": "Предоплата",
-                        //                 "field_code": null,
-                        //                 "field_type": "numeric",
-                        //                 "values": [
-                        //                     {
-                        //                         "value": result.sum_prepaid
-                        //                     }
-                        //                 ]
-                        //             },
-                        //             {
-                        //                 "field_id": 1527491,
-                        //                 "field_name": "Скидка",
-                        //                 "field_code": null,
-                        //                 "field_type": "numeric",
-                        //                 "values": [
-                        //                     {
-                        //                         "value": result.percent_off
-                        //                     }
-                        //                 ]
-                        //             },
-                        //             {
-                        //                 "field_id": 1527493,
-                        //                 "field_name": "Количество гостей",
-                        //                 "field_code": null,
-                        //                 "field_type": "numeric",
-                        //                 "values": [
-                        //                     {
-                        //                         "value": guestCount
-                        //                     }
-                        //                 ]
-                        //             },
-                        //         ],
-                        //         "score": null,
-                        //         "account_id": 31623822,
-                        //         "created_at": 1608905348,
-                        //         "status_id": 65270938,
-                        //         "pipeline_id": 7948234,
-                        //     },
-                        // ]);
-                        //
-                        // leads.then((createdLead) => {
-                        //     console.log('Lead created successfully with ID:', createdLead.data[0].id);
-                        //     writeIdsToFile(result.id, createdLead.data[0].id);
-                        // }).catch((error) => {
-                        //     console.error('Error creating leads:', error);
-                        // });
-                        //
 
                         //-------------------------------------------------------------------------
 
