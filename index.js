@@ -305,7 +305,7 @@ pool.getConnection((err, connection) => {
                                 "_embedded": {
                                     "contacts": [
                                         {
-                                            "id": parseInt(contactId, 10)
+                                            "id": 14984327
                                         }
                                     ]
                                 },
