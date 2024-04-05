@@ -234,7 +234,7 @@ pool.getConnection((err, connection) => {
                             {
                                 "name": result.id + "",
                                 "price": result.sum_full,
-                                // "_embedded[contacts][0][id]": parseInt(contactId, 10),
+                                "_embedded[contacts][0][id]": 14984327,
                                 "custom_fields_values": [
                                     {
                                         "field_id": 1527477,
