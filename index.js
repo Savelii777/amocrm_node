@@ -144,7 +144,7 @@ pool.getConnection((err, connection) => {
                         const formattedTomorrow = formatDate(tomorrow);
 
                         const guestCount = parseInt(result.guest_count, 10);
-                        const contactsd = client.request.get('/api/v4/contacts')
+                        const contactsd = client.request.get('/api/v4/contacts/12521077')
 
                         contactsd.then((res) => {
                             console.log(res.data._embedded.contacts[0]);
