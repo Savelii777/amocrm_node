@@ -230,7 +230,7 @@ pool.getConnection((err, connection) => {
 
 
 
-                        const leads = client.request.post('/api/v4/leads/complex', [
+                        const leads = client.request.post('/api/v4/leads', [
                             {
                                 "name": result.id + "",
                                 "price": result.sum_full,
