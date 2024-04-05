@@ -144,7 +144,13 @@ pool.getConnection((err, connection) => {
                         const formattedTomorrow = formatDate(tomorrow);
 
                         const guestCount = parseInt(result.guest_count, 10);
+                        const contactsd = client.request.get('/api/v4/contacts')
 
+                        contactsd.then((res) => {
+                            console.log(res.data._embedded.contacts[0].id);
+                        }).catch((error) => {
+                            console.error('Error creating leads:', error);
+                        });
                         // readContactsIdsFromFile((idContactsObj) => {
                         //     console.log("function");
                         //     if (Object.keys(idContactsObj).length === 0) {
