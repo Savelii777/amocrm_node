@@ -147,7 +147,7 @@ pool.getConnection((err, connection) => {
                         const contactsd = client.request.get('/api/v4/contacts/12521077')
 
                         contactsd.then((res) => {
-                            console.log(res.data._embedded.contacts[0]);
+                            console.log(res.data);
                         }).catch((error) => {
                             console.error('Error creating leads:', error);
                         });
